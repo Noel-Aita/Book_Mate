@@ -1,7 +1,7 @@
 // src/components/HomeScreen.jsx
 import React, { useState } from "react";
 import bgImage from "../assets/bg.jpg"; // Background image
-import logo from "../assets/logo.png"; // Placeholder logo
+import logo from "../assets/logo.jpg"; // Placeholder logo
 
 function HomeScreen({ onStart }) {
   const [category, setCategory] = useState("any");
@@ -27,7 +27,7 @@ function HomeScreen({ onStart }) {
 
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
-          🎓 BrainBoost Quiz
+          🎓 Book-Mate Quiz
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">

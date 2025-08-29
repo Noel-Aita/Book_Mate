@@ -1,41 +1,34 @@
+// src/components/ResultScreen.jsx
 import React from "react";
+import bgImage from "../assets/bg.jpg";
 
-function ResultsScreen({ score, total, onRestart }) {
+function ResultScreen({ winners, onRestart }) {
   return (
-    <div className="results-screen text-center">
-      {/* Title */}
-      <h2 className="text-2xl font-bold mb-4">Quiz Results</h2>
+    <div
+      className="min-h-screen flex flex-col items-center justify-center p-6"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="bg-white p-8 rounded-2xl shadow-xl text-center max-w-md w-full">
+        <h2 className="text-2xl font-bold mb-4">🏆 Game Over!</h2>
+        {winners.length > 0 ? (
+          <p className="text-lg mb-4">Winner: {winners.join(", ")}</p>
+        ) : (
+          <p className="text-lg mb-4">No winners this time 😅</p>
+        )}
 
-      {/* Display Score */}
-      <p className="text-lg mb-4">
-        You scored <span className="font-bold">{score}</span> out of{" "}
-        <span className="font-bold">{total}</span>
-      </p>
-
-      {/* Performance Feedback */}
-      {score / total >= 0.8 ? (
-        <p className="text-green-600 font-semibold mb-4">
-          🎉 Excellent work!
-        </p>
-      ) : score / total >= 0.5 ? (
-        <p className="text-yellow-600 font-semibold mb-4">
-          👍 Good effort, keep practicing!
-        </p>
-      ) : (
-        <p className="text-red-600 font-semibold mb-4">
-          😅 Don’t worry, try again and you’ll improve!
-        </p>
-      )}
-
-      {/* Restart Button */}
-      <button
-        onClick={onRestart}
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Restart Quiz
-      </button>
+        <button
+          onClick={onRestart}
+          className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+        >
+          🔄 Play Again
+        </button>
+      </div>
     </div>
   );
 }
 
-export default ResultsScreen;
+export default ResultScreen;
