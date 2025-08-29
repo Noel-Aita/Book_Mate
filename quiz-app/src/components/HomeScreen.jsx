@@ -1,77 +1,88 @@
+// src/components/HomeScreen.jsx
 import React, { useState } from "react";
+import bgImage from "../assets/bg.jpg"; // Background image
+import logo from "../assets/logo.png"; // Placeholder logo
 
 function HomeScreen({ onStart }) {
-  // ------------------------------
-  // Local state to store user selections
-  // ------------------------------
-  const [category, setCategory] = useState("9"); // default: General Knowledge
-  const [difficulty, setDifficulty] = useState("easy");
-  const [amount, setAmount] = useState(5);
+  const [category, setCategory] = useState("any");
+  const [difficulty, setDifficulty] = useState("any");
+  const [numQuestions, setNumQuestions] = useState(5);
 
-  // ------------------------------
-  // Handle form submission
-  // ------------------------------
-  const handleStart = (e) => {
-    e.preventDefault(); // prevent page reload
-    // Pass selected settings back to App.jsx
-    onStart({ category, difficulty, amount });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onStart({ category, difficulty, numQuestions });
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-white shadow-lg rounded-xl p-6">
-      <h1 className="text-2xl font-bold mb-4 text-center">🎯 Welcome to Quiz App</h1>
-      <form onSubmit={handleStart} className="space-y-4">
-        
-        {/* Category Selection */}
-        <div>
-          <label className="block font-medium mb-1">Select Category</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full border rounded-lg p-2"
+    <div
+      className="min-h-screen flex flex-col items-center justify-center p-6"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Logo area */}
+      <img src={logo} alt="Quiz Logo" className="w-32 h-32 mb-6" />
+
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
+          🎓 BrainBoost Quiz
+        </h1>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Category Select */}
+          <div>
+            <label className="block mb-1 font-semibold">Category</label>
+            <select
+              className="w-full border rounded-lg px-3 py-2"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="any">Any</option>
+              <option value="9">General Knowledge</option>
+              <option value="21">Sports</option>
+              <option value="23">History</option>
+            </select>
+          </div>
+
+          {/* Difficulty Select */}
+          <div>
+            <label className="block mb-1 font-semibold">Difficulty</label>
+            <select
+              className="w-full border rounded-lg px-3 py-2"
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
+            >
+              <option value="any">Any</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+
+          {/* Number of Questions */}
+          <div>
+            <label className="block mb-1 font-semibold">Number of Questions</label>
+            <input
+              type="number"
+              min="3"
+              max="20"
+              className="w-full border rounded-lg px-3 py-2"
+              value={numQuestions}
+              onChange={(e) => setNumQuestions(e.target.value)}
+            />
+          </div>
+
+          {/* Start Button */}
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition-all duration-300"
           >
-            <option value="9">General Knowledge</option>
-            <option value="21">Sports</option>
-            <option value="23">History</option>
-            <option value="17">Science & Nature</option>
-          </select>
-        </div>
-
-        {/* Difficulty Selection */}
-        <div>
-          <label className="block font-medium mb-1">Select Difficulty</label>
-          <select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-            className="w-full border rounded-lg p-2"
-          >
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </div>
-
-        {/* Number of Questions */}
-        <div>
-          <label className="block font-medium mb-1">Number of Questions</label>
-          <input
-            type="number"
-            min="1"
-            max="20"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="w-full border rounded-lg p-2"
-          />
-        </div>
-
-        {/* Start Quiz Button */}
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition"
-        >
-          🚀 Start Quiz
-        </button>
-      </form>
+            🚀 Start Game
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

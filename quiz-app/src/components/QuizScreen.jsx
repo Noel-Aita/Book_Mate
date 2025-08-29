@@ -1,86 +1,59 @@
+// src/components/QuizScreen.jsx
 import React, { useState, useEffect } from "react";
-import { decodeHtmlEntities, shuffleArray } from "../utils/helpers";
 
-function QuizScreen({ questions, onFinish }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+// Shuffle helper
+function shuffleArray(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+const QuizScreen = ({ questions, onFinish }) => {
+  const [current, setCurrent] = useState(0);
   const [score, setScore] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [answers, setAnswers] = useState([]); // start empty
+  const [shuffledAnswers, setShuffledAnswers] = useState([]);
 
-  // --------------------------
-  // Load answers when question changes
-  // --------------------------
   useEffect(() => {
     if (questions.length > 0) {
-      setAnswers(
-        shuffleArray([
-          questions[currentIndex].correct_answer,
-          ...questions[currentIndex].incorrect_answers,
-        ])
+      const q = questions[current];
+      setShuffledAnswers(
+        shuffleArray([q.correct_answer, ...q.incorrect_answers])
       );
     }
-  }, [currentIndex, questions]);
+  }, [current, questions]);
 
-  const handleSelect = (answer) => {
-    setSelected(answer);
-  };
-
-  const handleNext = () => {
-    if (selected === questions[currentIndex].correct_answer) {
+  const handleAnswer = (answer) => {
+    if (answer === questions[current].correct_answer) {
       setScore(score + 1);
     }
 
-    const nextIndex = currentIndex + 1;
-    if (nextIndex < questions.length) {
-      setCurrentIndex(nextIndex);
-      setSelected(null);
+    if (current + 1 < questions.length) {
+      setCurrent(current + 1);
     } else {
-      onFinish(score);
+      onFinish(score + 1);
     }
   };
 
-  // --------------------------
-  // Safety check: wait for data
-  // --------------------------
-  if (!questions || questions.length === 0) {
+  if (questions.length === 0) {
     return <p>Loading questions...</p>;
   }
 
-  const currentQuestion = questions[currentIndex];
-
   return (
-    <div className="quiz-screen">
+    <div className="bg-white p-6 rounded-xl shadow-lg max-w-lg w-full">
       <h2 className="text-xl font-bold mb-4">
-        Question {currentIndex + 1} of {questions.length}
+        Q{current + 1}: {questions[current].question}
       </h2>
-
-      <p className="mb-4">{decodeHtmlEntities(currentQuestion.question)}</p>
-
-      <div className="space-y-2 mb-4">
-        {answers.map((answer, index) => (
+      <div className="space-y-2">
+        {shuffledAnswers.map((answer, idx) => (
           <button
-            key={index}
-            onClick={() => handleSelect(answer)}
-            className={`w-full border p-2 rounded 
-              ${selected === answer ? "bg-blue-200" : "bg-white"}
-            `}
+            key={idx}
+            onClick={() => handleAnswer(answer)}
+            className="w-full bg-blue-100 hover:bg-blue-300 text-left p-2 rounded"
           >
-            {decodeHtmlEntities(answer)}
+            {answer}
           </button>
         ))}
       </div>
-
-      <button
-        onClick={handleNext}
-        disabled={!selected}
-        className={`px-4 py-2 rounded text-white ${
-          selected ? "bg-green-500 hover:bg-green-600" : "bg-gray-400"
-        }`}
-      >
-        {currentIndex + 1 === questions.length ? "Finish Quiz" : "Next Question"}
-      </button>
     </div>
   );
-}
+};
 
 export default QuizScreen;
