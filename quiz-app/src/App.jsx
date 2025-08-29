@@ -13,27 +13,38 @@ function App() {
   // --------------------------
   const startQuiz = async (config) => {
   try {
-    // Start with minimum params
     let url = `https://opentdb.com/api.php?amount=${config.numQuestions}&type=multiple`;
 
-    // Only add category if user selected one
     if (config.category && config.category !== "any") {
       url += `&category=${config.category}`;
     }
 
-    // Only add difficulty if user selected one
     if (config.difficulty && config.difficulty !== "any") {
       url += `&difficulty=${config.difficulty}`;
     }
 
-    console.log("Fetching from:", url); // 👀 Check URL in console
-
+    console.log("Fetching from:", url);
     const res = await fetch(url);
     const data = await res.json();
     console.log("API Response:", data);
 
     if (data.response_code === 0 && data.results.length > 0) {
-      setQuestions(data.results);
+      // Transform each question to include 'answers' array
+      const formattedQuestions = data.results.map((q) => {
+        const answers = [...q.incorrect_answers, q.correct_answer];
+        // Shuffle answers
+        for (let i = answers.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [answers[i], answers[j]] = [answers[j], answers[i]];
+        }
+        return {
+          question: q.question,
+          answers: answers,
+          correct_answer: q.correct_answer,
+        };
+      });
+
+      setQuestions(formattedQuestions);
       setScore(0);
       setStage("quiz");
     } else {
@@ -44,6 +55,7 @@ function App() {
     alert("Failed to load quiz. Please try again.");
   }
 };
+
 
 
 

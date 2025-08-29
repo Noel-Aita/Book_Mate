@@ -1,0 +1,125 @@
+/* QuizScreen.module.css */
+
+/* Full-screen background wrapper */
+.wrapper {
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+/* Quiz card container with fade-in animation */
+.card {
+  background-color: rgba(255, 255, 255, 0.85);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Fade-in keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Progress bar container */
+.progressContainer {
+  width: 100%;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+/* Progress bar fill */
+.progressBar {
+  height: 100%;
+  background-color: #4caf50;
+  width: 0%; /* will be updated dynamically */
+  transition: width 0.5s ease-in-out;
+  border-radius: 5px;
+}
+
+/* Question title */
+.question {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+/* Answer buttons container */
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Answer button */
+.answerButton {
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  background-color: #2196f3;
+  transition: all 0.3s;
+}
+
+.selected {
+  background-color: #4caf50 !important;
+}
+
+.answerButton:hover {
+  background-color: #1976d2;
+}
+
+/* Next button */
+.nextButton {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  color: white;
+  background-color: #ff9800;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nextButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.nextButton:hover:enabled {
+  background-color: #fb8c00;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .card {
+    padding: 1.5rem;
+  }
+  .question {
+    font-size: 1.1rem;
+  }
+  .answerButton {
+    font-size: 0.95rem;
+  }
+  .nextButton {
+    font-size: 0.95rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
