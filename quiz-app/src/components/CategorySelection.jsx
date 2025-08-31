@@ -30,7 +30,9 @@ const CategorySelection = ({ onStartQuiz }) => {
 
   return (
     <div className={styles.container}>
-      <h2>Choose Quiz</h2>
+      <form className={styles.firstForm}>
+      <h2 className={styles.chooseQuiz}>Choose Quiz</h2>
+      </form>
       <form onSubmit={handleSubmit} className={styles.form}>
         <label>Category</label>
         <select value={category} onChange={(e) => setCategory(e.target.value)}>

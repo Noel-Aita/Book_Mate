@@ -6,7 +6,8 @@
   flex-direction: row;
   padding: 20px;
   gap: 30px;
-  background:rgb(43, 166, 175);
+  background-image:url('src/assets/pencils.jpg');
+  background-size: cover;
 }
 
 /* Left side: main quiz area */

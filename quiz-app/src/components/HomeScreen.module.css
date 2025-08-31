@@ -7,11 +7,12 @@
 .container {
   display: flex;
   flex-direction: row;
-  width: 100%;
-  min-height: 100vh;
-  background-color: #61d1b9; /* subtle background for app */
-  padding: 20px;
+  height: 100vh;
+  background-image: url("src/assets/home-bg.jpg");
+  background-size: cover;
+  background-position: center;
   box-sizing: border-box;
+
 }
 
 /* Left pane: welcome + login button */
@@ -20,7 +21,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items:center;
   padding: 20px;
 }
 
@@ -28,7 +29,7 @@
 .title {
   font-size: 4rem;
   margin-bottom: 20px;
-  color: #1a202c; /* dark color */
+  color: #ffffff; /* dark color */
 }
 
 /*welcome message*/
@@ -61,7 +62,7 @@
   flex: 1; /* take half the width */
   padding: 20px;
   overflow-y: auto; /* scroll if content exceeds height */
-  background-color: #996e6e;
+  background-color: #3c998a85;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -87,7 +88,7 @@
   border: 1px solid #e2e8f0;
   padding: 12px;
   border-radius: 8px;
-  background-color: #edf2f7;
+  background-color: #5c80a5;
 }
 
 /* Blog image */

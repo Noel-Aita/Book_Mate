@@ -12,7 +12,7 @@ const PlayerSetup = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Choose Player Mode</h2>
+      <h2 className ={styles.title}>Choose Player Mode</h2>
       <button
         onClick={() => navigate("/category")} // single-player
         className={styles.single_button}

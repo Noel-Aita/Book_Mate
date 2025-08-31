@@ -15,11 +15,12 @@ const ResultScreen = ({ score, totalQuestions }) => {
 
   return (
     <div className={styles.container}>
-      <h2>Your Score: {score} / {totalQuestions}</h2>
+      <form className={styles.result}>
+      <h2 className={styles.firstresult}>Your Score: {score} / {totalQuestions}</h2>
 
       {/* Retry button goes back to quiz screen */}
       <button
-        className={styles.button}
+        className={styles.retrybutton}
         onClick={() => navigate("/quiz")}
       >
         Retry Quiz
@@ -32,6 +33,7 @@ const ResultScreen = ({ score, totalQuestions }) => {
       >
         Home
       </button>
+      </form>
     </div>
   );
 };
