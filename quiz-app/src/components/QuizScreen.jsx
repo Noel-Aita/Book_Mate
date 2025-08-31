@@ -137,7 +137,7 @@ const QuizScreen = ({ category, difficulty }) => {
         <div className={styles.blogList}>
           <div className={styles.blogCard}>
             <img
-              src="src/assets/science.jpg"
+              src="/images/science.jpg"
               alt="Science"
               className={styles.blogImage}
             />
@@ -145,7 +145,7 @@ const QuizScreen = ({ category, difficulty }) => {
           </div>
           <div className={styles.blogCard}>
             <img
-              src="src/assets/art.jpg"
+              src="/images/art.jpg"
               alt="Arts"
               className={styles.blogImage}
             />
@@ -153,7 +153,7 @@ const QuizScreen = ({ category, difficulty }) => {
           </div>
           <div className={styles.blogCard}>
             <img
-              src="src/assets/tech-3.jpg"
+              src="/images/tech-3.jpg"
               alt="Tech"
               className={styles.blogImage}
             />

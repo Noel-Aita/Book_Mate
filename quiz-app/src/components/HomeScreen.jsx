@@ -31,15 +31,15 @@ const HomeScreen = () => {
         <h3 className={styles.blogTitle}>Daily Blogs</h3>
         <div className={styles.blogList}>
           <div className={styles.blogCard}>
-            <img src="src/assets/images.jpeg" alt="Science" className={styles.blogImage} />
+            <img src="/images/images.jpeg" alt="Science" className={styles.blogImage} />
             <p>Explore fascinating science facts and experiments daily.</p>
           </div>
           <div className={styles.blogCard}>
-            <img src="src/assets/logo.jpg" alt="Arts" className={styles.blogImage} />
+            <img src="/images/logo.jpg" alt="Arts" className={styles.blogImage} />
             <p>Discover music, arts, and photography insights.</p>
           </div>
           <div className={styles.blogCard}>
-            <img src="src/assets/learning.jpg" alt="Tech" className={styles.blogImage} />
+            <img src="/images/learning.jpg" alt="Tech" className={styles.blogImage} />
             <p>Learn about the latest technology and innovations.</p>
           </div>
         </div>
