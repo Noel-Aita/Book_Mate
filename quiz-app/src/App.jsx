@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
@@ -12,17 +11,14 @@ import ResultScreen from "./components/ResultScreen";
 
 /**
  * App.jsx
- * ----------------
- * Main routing and state management.
- * - Handles login/signup, player setup
- * - Category/difficulty selection
- * - Quiz flow
- * - Results
+ * Main router and state management
  */
 const App = () => {
+  // Auth & player
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [player, setPlayer] = useState(null);
 
+  // Quiz state
   const [category, setCategory] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [score, setScore] = useState(0);
@@ -85,7 +81,7 @@ const App = () => {
         />
 
         <Route
-          path="/results"
+          path="/result"
           element={
             isLoggedIn ? (
               <ResultScreen score={score} totalQuestions={totalQuestions} />
@@ -95,7 +91,6 @@ const App = () => {
           }
         />
 
-        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
