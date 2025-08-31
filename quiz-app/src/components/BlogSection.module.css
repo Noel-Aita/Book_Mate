@@ -1,0 +1,51 @@
+/* src/components/BlogSection.css */
+
+/* Sidebar area */
+.blog-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Blog list container */
+.blog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Each blog card */
+.blog-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Blog images */
+.blog-image {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+/* Blog title */
+.blog-card h4 {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  color: #222;
+}
+
+/* Blog text */
+.blog-card p {
+  font-size: 0.9rem;
+  color: #555;
+}

@@ -1,0 +1,95 @@
+/* src/components/CategorySelection.module.css */
+
+/* Main container */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  min-height: 100vh;
+  background-color: #2ba893;
+}
+
+/* Title */
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #2d3748;
+  text-align: center;
+}
+
+/* Form wrapper */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+  background-color: #107474;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Label */
+.label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+/* Dropdowns */
+.select {
+  padding: 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e0;
+}
+
+/* Start Quiz button */
+.button {
+  padding: 12px;
+  font-size: 1.1rem;
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.backButton{
+  background: blue;
+  padding: 10px;
+}
+
+.backButton:hover {
+  background-color: #104986;
+  transform: scale(1.03);
+}
+
+.startQuiz{
+  background-color: blue;
+}
+
+.startQuiz:hover {
+  background-color: #104986;
+  transform: scale(1.03);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.7rem;
+  }
+  .form {
+    padding: 15px;
+  }
+  .select {
+    font-size: 0.95rem;
+  }
+  .button {
+    font-size: 1rem;
+  }
+}

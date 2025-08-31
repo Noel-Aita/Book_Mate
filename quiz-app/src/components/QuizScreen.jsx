@@ -1,80 +1,165 @@
-import React, { useState } from "react";
+// src/components/QuizScreen.jsx
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import decodeHtml from "../utils/decodeHtml"; // helper to decode HTML entities
+import localQuestions from "../data/localQuestions"; // fallback questions
 import styles from "./QuizScreen.module.css";
 
-const bg = new URL("../assets/bg.jpg", import.meta.url).href;
+const QuizScreen = ({ category, difficulty }) => {
+  const [questions, setQuestions] = useState([]);       // All questions (API or local)
+  const [currentIndex, setCurrentIndex] = useState(0);  // Current question index
+  const [answers, setAnswers] = useState({});           // Selected answers
+  const [loading, setLoading] = useState(true);        // Loading state
+  const navigate = useNavigate();
 
-const QuizScreen = ({ questions, onFinish }) => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [score, setScore] = useState(0);
+  // Shuffle helper to randomize answer choices
+  const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
 
-  const currentQuestion = questions[currentQuestionIndex];
+  // Fetch questions from API with fallback to local questions
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const res = await fetch(
+          `https://opentdb.com/api.php?amount=5&category=18&type=multiple`
+        );
+        if (!res.ok) throw new Error("API request failed");
+        const data = await res.json();
+        if (data.results && data.results.length > 0) {
+          setQuestions(
+            data.results.map((q) => ({
+              ...q,
+              all_answers: shuffle([q.correct_answer, ...q.incorrect_answers]),
+            }))
+          );
+        } else {
+          console.warn("API returned no results, using local questions");
+          setQuestions(
+            localQuestions.map((q) => ({
+              ...q,
+              all_answers: shuffle([q.correct_answer, ...q.incorrect_answers]),
+            }))
+          );
+        }
+      } catch (err) {
+        console.error("API failed, using local questions:", err);
+        setQuestions(
+          localQuestions.map((q) => ({
+            ...q,
+            all_answers: shuffle([q.correct_answer, ...q.incorrect_answers]),
+          }))
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Calculate progress percentage
-  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+    fetchQuestions();
+  }, []);
 
-  // Handle answer click
-  const handleAnswerClick = (answer) => {
-    setSelectedAnswer(answer);
-    if (answer === currentQuestion.correct_answer) {
-      setScore(score + 1); // update score if correct
-    }
+  // Save selected answer for current question
+  const handleAnswer = (answer) => {
+    setAnswers({ ...answers, [currentIndex]: answer });
   };
 
-  // Move to next question or finish quiz
-  const handleNext = () => {
-    setSelectedAnswer(null);
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      onFinish(score); // pass final score to App.jsx
-    }
+  // Go to next question
+  const nextQuestion = () => {
+    if (currentIndex < questions.length - 1) setCurrentIndex(currentIndex + 1);
   };
 
-  // Determine button style dynamically
-  const getAnswerClass = (answer) => {
-    if (!selectedAnswer) return styles.answerButton;
-    if (answer === currentQuestion.correct_answer) return `${styles.answerButton} ${styles.correct}`;
-    if (answer === selectedAnswer) return `${styles.answerButton} ${styles.wrong}`;
-    return styles.answerButton;
+  // Go to previous question
+  const prevQuestion = () => {
+    if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
   };
+
+  // Go back to category selection
+  const goBack = () => {
+    navigate("/category");
+  };
+
+  // Submit quiz and navigate to result screen
+  const submitQuiz = () => {
+    let score = 0;
+    questions.forEach((q, idx) => {
+      if (answers[idx] === q.correct_answer) score++;
+    });
+    navigate("/results", { state: { score, totalQuestions: questions.length } });
+  };
+
+  if (loading) return <p>Loading questions...</p>;
+
+  const q = questions[currentIndex];
 
   return (
-    <div
-      className={styles.wrapper}
-      style={{ backgroundImage: `url(${bg})` }}
-    >
-      <div className={styles.card}>
-        {/* Progress bar */}
-        <div className={styles.progressContainer}>
-          <div
-            className={styles.progressBar}
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
+    <div className={styles.container}>
+      {/* Left side: Quiz content */}
+      <div>
+        <h2>
+          Question {currentIndex + 1} of {questions.length}
+        </h2>
+        <p>{decodeHtml(q.question)}</p>
 
-        <h2 className={styles.question}>{currentQuestion.question}</h2>
+        {q.all_answers.map((ans, idx) => (
+          <button
+            key={idx}
+            onClick={() => handleAnswer(ans)}
+            className={
+              answers[currentIndex] === ans
+                ? `${styles.answerButton} ${styles.selectedAnswer}`
+                : styles.answerButton
+            }
+          >
+            {decodeHtml(ans)}
+          </button>
+        ))}
 
-        <div className={styles.answers}>
-          {currentQuestion.answers.map((answer, index) => (
-            <button
-              key={index}
-              onClick={() => handleAnswerClick(answer)}
-              className={getAnswerClass(answer)}
-              disabled={!!selectedAnswer} // prevent changing answer
-            >
-              {answer}
+        <div className={styles.navigation}>
+          <button onClick={goBack}>Back</button>
+          <button onClick={prevQuestion} disabled={currentIndex === 0}>
+            Previous
+          </button>
+          <button
+            onClick={nextQuestion}
+            disabled={currentIndex === questions.length - 1}
+          >
+            Next
+          </button>
+          {currentIndex === questions.length - 1 && (
+            <button onClick={submitQuiz} className={styles.submitButton}>
+              Submit
             </button>
-          ))}
+          )}
         </div>
+      </div>
 
-        <button
-          onClick={handleNext}
-          disabled={!selectedAnswer}
-          className={styles.nextButton}
-        >
-          {currentQuestionIndex === questions.length - 1 ? "Finish" : "Next"}
-        </button>
+      {/* Right side: Blog section */}
+      <div className={styles.blogPane}>
+        <h3 className={styles.blogTitle}>Daily Blogs</h3>
+        <div className={styles.blogList}>
+          <div className={styles.blogCard}>
+            <img
+              src="/assets/blog1.jpg"
+              alt="Science"
+              className={styles.blogImage}
+            />
+            <p>Explore fascinating science facts and experiments daily.</p>
+          </div>
+          <div className={styles.blogCard}>
+            <img
+              src="/assets/blog2.jpg"
+              alt="Arts"
+              className={styles.blogImage}
+            />
+            <p>Discover music, arts, and photography insights.</p>
+          </div>
+          <div className={styles.blogCard}>
+            <img
+              src="/assets/blog3.jpg"
+              alt="Tech"
+              className={styles.blogImage}
+            />
+            <p>Learn about the latest technology and innovations.</p>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,125 +1,132 @@
-/* QuizScreen.module.css */
+/* src/components/QuizScreen.module.css */
 
-/* Full-screen background wrapper */
-.wrapper {
-  background-size: cover;
-  background-position: center;
-  min-height: 100vh;
+/* Container for the entire quiz screen, uses flex for left-right layout */
+.container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
+  flex-direction: row;
+  padding: 20px;
+  gap: 30px;
+  background:rgb(43, 166, 175);
 }
 
-/* Quiz card container with fade-in animation */
-.card {
-  background-color: rgba(255, 255, 255, 0.85);
-  padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
-  max-width: 500px;
-  width: 100%;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-/* Fade-in keyframes */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Progress bar container */
-.progressContainer {
-  width: 100%;
-  height: 10px;
-  background-color: #ddd;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
-
-/* Progress bar fill */
-.progressBar {
-  height: 100%;
-  background-color: #4caf50;
-  width: 0%; /* will be updated dynamically */
-  transition: width 0.5s ease-in-out;
-  border-radius: 5px;
+/* Left side: main quiz area */
+.container > div:first-child {
+  flex: 2;
 }
 
 /* Question title */
-.question {
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+h2 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
 }
 
-/* Answer buttons container */
-.answers {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+/* Question text */
+p {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
 }
 
-/* Answer button */
+/* Answer buttons */
 .answerButton {
-  padding: 0.75rem;
-  border-radius: 10px;
-  border: none;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #2c8d41;
   cursor: pointer;
-  font-weight: bold;
-  color: white;
-  background-color: #2196f3;
-  transition: all 0.3s;
-}
-
-.selected {
-  background-color: #4caf50 !important;
+  text-align: left;
+  transition: background-color 0.2s ease;
 }
 
 .answerButton:hover {
-  background-color: #1976d2;
+  background-color: #2d4c6b;
 }
 
-/* Next button */
-.nextButton {
-  margin-top: 1.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 10px;
-  border: none;
-  font-weight: bold;
+/* Selected answer highlight */
+.selectedAnswer {
+  background-color: #e77deb; /* light green */
+  border-color: #0f5132;
+}
+
+/* Navigation buttons container */
+.navigation {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Submit button styling */
+.submitButton {
+  background-color: #0d6efd;
   color: white;
-  background-color: #ff9800;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s;
 }
 
-.nextButton:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.submitButton:hover {
+  background-color: #084298;
 }
 
-.nextButton:hover:enabled {
-  background-color: #fb8c00;
+/* Right side: blog section */
+.blogPane {
+  flex: 1;
+  max-width: 300px;
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .card {
-    padding: 1.5rem;
+.blogTitle {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.blogList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.blogCard {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #3eb491;
+}
+
+.blogImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.blogCard p {
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
   }
-  .question {
-    font-size: 1.1rem;
+
+  .blogPane {
+    max-width: 100%;
+    margin-top: 20px;
   }
+
   .answerButton {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
-  .nextButton {
-    font-size: 0.95rem;
-    padding: 0.6rem 1.2rem;
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  p {
+    font-size: 1rem;
   }
 }
