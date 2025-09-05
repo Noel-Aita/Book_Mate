@@ -1,35 +1,48 @@
 // src/components/PlayerSetup.jsx
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./PlayerSetup.module.css";
+import PlayerSetupMultiplayer from "./PlayerSetupMultiplayer";
 
-/**
- * Allows player to choose single or multi-player mode.
- * Navigates to CategorySelection.
- */
-const PlayerSetup = () => {
+const PlayerSetup = ({ onSetup }) => {
+  const [mode, setMode] = useState(null); // "single" or "multi"
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
-  return (
-    <div className={styles.container}>
-      <h2 className ={styles.title}>Choose Player Mode</h2>
-      <button
-        onClick={() => navigate("/category")} // single-player
-        className={styles.single_button}
-      >
-        Single Player
-      </button>
-      <button
-        onClick={() => navigate("/category")} // multi-player
-        className={styles.multi_button}
-      >
-        Multi Player
-      </button>
-      <button onClick={() => navigate("/")} className={styles.backButton}>
-        Back to Home
-      </button>
-    </div>
-  );
+  if (!mode) {
+    return (
+      <div style={{ padding: 20 }}>
+        <h2>Select Mode</h2>
+        <button onClick={() => setMode("single")}>Single Player</button>
+        <button onClick={() => setMode("multi")}>Multiplayer</button>
+      </div>
+    );
+  }
+
+  if (mode === "single") {
+    return (
+      <div style={{ padding: 20 }}>
+        <h2>Enter Username</h2>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <button
+          onClick={() => {
+            if (!username) return alert("Enter username");
+            onSetup({ username });
+            navigate("/category"); // single-player goes to category selection
+          }}
+        >
+          Continue
+        </button>
+      </div>
+    );
+  }
+
+  // Multiplayer setup
+  return <PlayerSetupMultiplayer onSetup={onSetup} />;
 };
 
 export default PlayerSetup;

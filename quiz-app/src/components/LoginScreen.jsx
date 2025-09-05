@@ -1,7 +1,7 @@
 // src/components/LoginScreen.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./LoginScreen.module.css";
+import styles from "../styles/LoginScreen.module.css";
 
 /**
  * Displays login/signup form.
@@ -16,7 +16,7 @@ const LoginScreen = ({ onLogin }) => {
     if (!username) return alert("Please enter a username");
     const playerData = { name: username };
     onLogin(playerData); // update player in App.jsx
-    navigate("/setup"); // go to player setup
+    navigate("/player-setup"); // go to player setup
   };
 
   return (

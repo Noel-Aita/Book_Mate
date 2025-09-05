@@ -1,24 +1,19 @@
+// src/App.jsx
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 // Screens
 import HomeScreen from "./components/HomeScreen";
-import LoginScreen from "./components/LoginScreen";
 import PlayerSetup from "./components/PlayerSetup";
 import CategorySelection from "./components/CategorySelection";
 import QuizScreen from "./components/QuizScreen";
 import ResultScreen from "./components/ResultScreen";
 
-/**
- * App.jsx
- * Main router and state management
- */
 const App = () => {
-  // Auth & player
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [player, setPlayer] = useState(null);
-
-  // Quiz state
+  // ------------------------
+  // Player & quiz state
+  // ------------------------
+  const [player, setPlayer] = useState(null);      // { username, roomId? }
   const [category, setCategory] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [score, setScore] = useState(0);
@@ -29,65 +24,55 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomeScreen />} />
 
-        <Route
-          path="/login"
-          element={
-            <LoginScreen
-              onLogin={(playerData) => {
-                setPlayer(playerData);
-                setIsLoggedIn(true);
-              }}
-            />
-          }
-        />
-
+        {/* Player setup route */}
         <Route
           path="/setup"
-          element={isLoggedIn ? <PlayerSetup /> : <Navigate to="/login" replace />}
+          element={<PlayerSetup onSetup={setPlayer} />}
         />
 
+        {/* Category selection for single-player */}
         <Route
           path="/category"
           element={
-            isLoggedIn ? (
+            player?.roomId ? (
+              <Navigate to="/quiz" replace /> // Multiplayer skips category
+            ) : (
               <CategorySelection
                 onStartQuiz={(cat, diff) => {
                   setCategory(cat);
                   setDifficulty(diff);
                 }}
               />
-            ) : (
-              <Navigate to="/login" replace />
             )
           }
         />
 
+        {/* Quiz screen */}
         <Route
           path="/quiz"
           element={
-            isLoggedIn ? (
+            player ? (
               <QuizScreen
                 category={category}
                 difficulty={difficulty}
+                roomId={player.roomId}   // undefined in single-player
+                username={player.username}
                 onFinish={(finalScore, total) => {
                   setScore(finalScore);
                   setTotalQuestions(total);
                 }}
               />
             ) : (
-              <Navigate to="/login" replace />
+              <Navigate to="/setup" replace />
             )
           }
         />
 
+        {/* Result screen */}
         <Route
           path="/result"
           element={
-            isLoggedIn ? (
-              <ResultScreen score={score} totalQuestions={totalQuestions} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            <ResultScreen score={score} totalQuestions={totalQuestions} />
           }
         />
 

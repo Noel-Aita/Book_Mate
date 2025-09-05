@@ -12,6 +12,30 @@
   background-image: url('/images/textbook.jpg');
   background-size: cover;
   margin: 5px;
+  margin-top: 5rem; /*new*/
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+input {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+button {
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.toggle {
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.error {
+  color: red;
 }
 
 .title{

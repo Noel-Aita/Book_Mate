@@ -1,125 +1,121 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import decodeHtml from "../utils/decodeHtml";
-import  localQuestions from "../data/localQuestions";
-import styles from "./QuizScreen.module.css";
+// src/components/QuizScreen.jsx
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getSocket } from "../services/socket";
+import useCountdown from "../hooks/useCountdown";
+import styles from "../styles/QuizScreen.module.css";
 
 const QuizScreen = ({ category, difficulty }) => {
-  const [questions, setQuestions] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [loading, setLoading] = useState(true);
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
+  // Get player info from setup
+  const { username, roomId } = location.state || {};
+
+  // State
+  const [question, setQuestion] = useState(null);
+  const [players, setPlayers] = useState([]); // store multiplayer leaderboard
+  const [score, setScore] = useState(0);
+  const { timeLeft, startTimer, resetTimer } = useCountdown(15);
 
   useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const res = await fetch(
-          `https://opentdb.com/api.php?amount=5&category=18&type=multiple`
-        );
-        if (!res.ok) throw new Error("API request failed");
-        const data = await res.json();
+    if (roomId) {
+      // Multiplayer mode
+      const socket = getSocket();
 
-        const formatted = (data.results || localQuestions).map((q) => ({
-          ...q,
-          all_answers: shuffle([q.correct_answer, ...q.incorrect_answers]),
-        }));
+      // Receive a new question from server
+      socket.on("newQuestion", (q) => {
+        setQuestion(q);
+        resetTimer();
+        startTimer();
+      });
 
-        setQuestions(formatted);
-      } catch (err) {
-        console.warn("API failed, using local questions", err);
-        setQuestions(
-          localQuestions.map((q) => ({
-            ...q,
-            all_answers: shuffle([q.correct_answer, ...q.incorrect_answers]),
-          }))
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+      // Update leaderboard when server sends updates
+      socket.on("updateLeaderboard", (data) => {
+        setPlayers(data); // array of { username, score }
+      });
 
-    fetchQuestions();
-  }, []);
+      // Ask server for the first question
+      socket.emit("requestQuestion", { roomId });
 
+      return () => {
+        socket.off("newQuestion");
+        socket.off("updateLeaderboard");
+      };
+    } else {
+      // Single player mode: fetch from API
+      fetch(
+        `https://opentdb.com/api.php?amount=1&category=${category}&difficulty=${difficulty}&type=multiple`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setQuestion(data.results[0]);
+          resetTimer();
+          startTimer();
+        });
+    }
+  }, [roomId, category, difficulty]);
+
+  // Handle answer click
   const handleAnswer = (answer) => {
-    setAnswers({ ...answers, [currentIndex]: answer });
+    if (roomId) {
+      // Multiplayer: send answer to server
+      const socket = getSocket();
+      socket.emit("answer", { roomId, username, answer });
+    } else {
+      // Single-player: check locally
+      if (answer === question.correct_answer) {
+        setScore((prev) => prev + 1);
+      }
+    }
   };
 
-  const nextQuestion = () => {
-    if (currentIndex < questions.length - 1) setCurrentIndex(currentIndex + 1);
+  // End game (when timer ends or all questions done)
+  const endGame = () => {
+    navigate("/result", { state: { score, players, username, roomId } });
   };
 
-  const prevQuestion = () => {
-    if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
-  };
+  useEffect(() => {
+    if (timeLeft === 0) {
+      endGame();
+    }
+  }, [timeLeft]);
 
-  const goBack = () => navigate("/category");
-
-  const submitQuiz = () => {
-    let score = 0;
-    questions.forEach((q, idx) => {
-      if (answers[idx] === q.correct_answer) score++;
-    });
-    navigate("/result", { state: { score, totalQuestions: questions.length } });
-  };
-
-  if (loading) return <p>Loading questions...</p>;
-  const q = questions[currentIndex];
+  if (!question) return <div>Loading question...</div>;
 
   return (
     <div className={styles.container}>
-      <div className={styles.leftPane}>
-        <h2>
-          Question {currentIndex + 1} of {questions.length}
-        </h2>
-        <p>{decodeHtml(q.question)}</p>
+      <h2>{roomId ? `Room: ${roomId}` : "Single Player Quiz"}</h2>
+      <h3>{question.question}</h3>
 
-        <div className={styles.answers}>
-          {q.all_answers.map((ans, idx) => (
-            <button
-              key={idx}
-              onClick={() => handleAnswer(ans)}
-              className={answers[currentIndex] === ans ? styles.selected : ""}
-            >
-              {decodeHtml(ans)}
+      <div>
+        {question.incorrect_answers
+          .concat(question.correct_answer)
+          .sort(() => Math.random() - 0.5)
+          .map((option, i) => (
+            <button key={i} onClick={() => handleAnswer(option)}>
+              {option}
             </button>
           ))}
-        </div>
-
-        <div className={styles.navigation}>
-          <button onClick={goBack}>Back</button>
-          <button onClick={prevQuestion} disabled={currentIndex === 0}>
-            Previous
-          </button>
-          <button onClick={nextQuestion} disabled={currentIndex === questions.length - 1}>
-            Next
-          </button>
-          {currentIndex === questions.length - 1 && (
-            <button onClick={submitQuiz}>Submit</button>
-          )}
-        </div>
       </div>
 
-      <div className={styles.rightPane}>
-        <h3>Daily Blogs</h3>
-        <div className={styles.blogList}>
-          <div className={styles.blogCard}>
-            <img src="/images/blog1.jpg" alt="Science" />
-            <p>Explore fascinating science facts and experiments daily.</p>
-          </div>
-          <div className={styles.blogCard}>
-            <img src="/images/blog2.jpg" alt="Arts" />
-            <p>Discover music, arts, and photography insights.</p>
-          </div>
-          <div className={styles.blogCard}>
-            <img src="/images/blog3.jpg" alt="Tech" />
-            <p>Learn about the latest technology and innovations.</p>
-          </div>
+      <p>⏳ Time left: {timeLeft}s</p>
+      {!roomId && <p>Score: {score}</p>}
+
+      {roomId && (
+        <div>
+          <h3>Leaderboard</h3>
+          <ul>
+            {players.map((p) => (
+              <li key={p.username}>
+                {p.username}: {p.score}
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
+      )}
+
+      <button onClick={endGame}>End Game</button>
     </div>
   );
 };

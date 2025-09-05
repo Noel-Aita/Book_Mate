@@ -1,59 +1,87 @@
 // src/components/CategorySelection.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./CategorySelection.module.css";
+import styles from "../styles/CategorySelection.module.css";
 
 /**
- * Lets player select category & difficulty.
- * Navigates to QuizScreen.
+ * CategorySelection
+ * Lets player choose category, difficulty, and optionally join/create a multiplayer room
+ *
+ * Props:
+ * - onStartQuiz(category, difficulty, roomId, isMultiplayer)
  */
 const CategorySelection = ({ onStartQuiz }) => {
   const navigate = useNavigate();
-  const [category, setCategory] = useState("");
-  const [difficulty, setDifficulty] = useState("");
 
-  const categories = [
-    { id: "9", name: "General Knowledge" },
-    { id: "21", name: "Sports" },
-    { id: "23", name: "History" },
-    { id: "17", name: "Science & Nature" },
-    { id: "22", name: "Geography" },
-  ];
-  const difficulties = ["easy", "medium", "hard"];
+  // Local state
+  const [category, setCategory] = useState("18"); // Default: Science
+  const [difficulty, setDifficulty] = useState("easy");
+  const [roomId, setRoomId] = useState("");
+  const [isMultiplayer, setIsMultiplayer] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!category || !difficulty) return alert("Select both category and difficulty");
-    onStartQuiz(category, difficulty); // update App.jsx
-    navigate("/quiz"); // go to quiz
+  // Handle quiz start
+  const startQuiz = () => {
+    if (isMultiplayer && !roomId) {
+      alert("Please enter a room ID to join or create a multiplayer room.");
+      return;
+    }
+    // Pass all info to App.jsx
+    onStartQuiz(category, difficulty, roomId, isMultiplayer);
+    navigate("/quiz"); // Go to QuizScreen
   };
 
   return (
     <div className={styles.container}>
-      <form className={styles.firstForm}>
-      <h2 className={styles.chooseQuiz}>Choose Quiz</h2>
-      </form>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <label>Category</label>
+      <h1>Select Quiz Category & Difficulty</h1>
+
+      {/* Category selection */}
+      <div className={styles.field}>
+        <label>Category:</label>
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="">-- Select --</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>{c.name}</option>
-          ))}
+          <option value="18">Science</option>
+          <option value="23">History</option>
+          <option value="21">Sports</option>
+          <option value="12">Music</option>
         </select>
+      </div>
 
-        <label>Difficulty</label>
+      {/* Difficulty selection */}
+      <div className={styles.field}>
+        <label>Difficulty:</label>
         <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
-          <option value="">-- Select --</option>
-          {difficulties.map((d) => (
-            <option key={d} value={d}>{d}</option>
-          ))}
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
         </select>
+      </div>
 
-        <button className={styles.startQuiz} type="submit">Start Quiz</button>
-      </form>
-      <button onClick={() => navigate("/setup")} className={styles.backButton}>
-        Back to Player Setup
+      {/* Multiplayer toggle */}
+      <div className={styles.field}>
+        <label>
+          <input
+            type="checkbox"
+            checked={isMultiplayer}
+            onChange={(e) => setIsMultiplayer(e.target.checked)}
+          />
+          Play Multiplayer
+        </label>
+      </div>
+
+      {/* Room ID input for multiplayer */}
+      {isMultiplayer && (
+        <div className={styles.field}>
+          <label>Room ID:</label>
+          <input
+            type="text"
+            placeholder="Enter or create room ID"
+            value={roomId}
+            onChange={(e) => setRoomId(e.target.value)}
+          />
+        </div>
+      )}
+
+      <button onClick={startQuiz} className={styles.startBtn}>
+        {isMultiplayer ? "Join/Create Room" : "Start Quiz"}
       </button>
     </div>
   );

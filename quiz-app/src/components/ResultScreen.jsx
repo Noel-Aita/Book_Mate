@@ -1,39 +1,38 @@
 // src/components/ResultScreen.jsx
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "./ResultScreen.module.css";
+import { useLocation, useNavigate } from "react-router-dom";
 
-/**
- * Displays the final quiz results and provides navigation options.
- *
- * Props:
- * - score: number of correct answers
- * - totalQuestions: total number of questions
- */
-const ResultScreen = ({ score, totalQuestions }) => {
-  const navigate = useNavigate(); // hook to navigate between routes
+const ResultScreen = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { score, players, username, roomId } = location.state || {};
 
   return (
-    <div className={styles.container}>
-      <form className={styles.result}>
-      <h2 className={styles.firstresult}>Your Score: {score} / {totalQuestions}</h2>
+    <div style={{ padding: 20 }}>
+      <h2>Game Over</h2>
 
-      {/* Retry button goes back to quiz screen */}
-      <button
-        className={styles.retrybutton}
-        onClick={() => navigate("/quiz")}
-      >
-        Retry Quiz
-      </button>
+      {roomId ? (
+        <>
+          <h3>Leaderboard (Room: {roomId})</h3>
+          <ul>
+            {players.map((p) => (
+              <li
+                key={p.username}
+                style={{
+                  fontWeight: p.username === username ? "bold" : "normal",
+                }}
+              >
+                {p.username}: {p.score}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <h3>Your Score: {score}</h3>
+      )}
 
-      {/* Go home button */}
-      <button
-        className={styles.button}
-        onClick={() => navigate("/")}
-      >
-        Home
-      </button>
-      </form>
+      <button onClick={() => navigate("/")}>Play Again</button>
     </div>
   );
 };
