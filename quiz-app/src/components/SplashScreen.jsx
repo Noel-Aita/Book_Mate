@@ -16,13 +16,14 @@ const SplashScreen = () => {
 
   return (
     <div className={styles.splashContainer}>
-      <img
-        src="/assets/splash.jpg"
-        alt="Splash"
-        className={styles.splashImage}
-      />
-    </div>
-  );
+    <img
+      src="/assets/splash.jpg"
+      alt="Splash Screen"
+      className={styles.splashImage}
+    />
+    <h1 className={styles.appTitle}>Book Mate Quiz</h1> {/* Optional title overlay */}
+      </div>
+  )
 };
 
 export default SplashScreen;

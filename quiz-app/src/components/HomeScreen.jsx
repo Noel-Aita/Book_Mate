@@ -12,12 +12,20 @@ const HomeScreen = () => {
       <div className={styles.homeContainer}>
         <h1>Welcome to BookMate Quiz App</h1>
         <p>Select Login or Signup to continue:</p>
-        <button
-          className={styles.homeButton}
-          onClick={() => navigate("/login")}
-        >
-          Login / Signup
-        </button>
+        <div className={styles.buttonGroup}>
+          <button
+            className={styles.homeButton}
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </button>
+          <button
+            className={styles.homeButton}
+            onClick={() => navigate("/signup")}
+          >
+            Signup
+          </button>
+        </div>
       </div>
     </Layout>
   );

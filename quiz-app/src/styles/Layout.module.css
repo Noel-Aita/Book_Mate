@@ -11,16 +11,16 @@
 .mainContent {
   flex: 3;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #10967d54;
   border-radius: 8px;
 }
 
 .blogSidebar {
   flex: 1;
   padding: 10px;
-  background-color: #fff;
+  background-color: #9f1111;
   border-radius: 8px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  box-shadow: 0 0 5px rgba(25, 7, 156, 0.1);
   max-width: 300px;
-  height: fit-content;
+  height: 1;
 }

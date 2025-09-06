@@ -2,7 +2,7 @@
 // ✅ Local fallback questions in case the API fails or rate-limits.
 // Each object matches the API structure: question, correct_answer, incorrect_answers.
 
-const localQuestions = [
+export const localQuestions = [
   {
     question: "What is 2 + 2?",
     correct_answer: "4",

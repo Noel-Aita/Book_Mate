@@ -1,132 +1,54 @@
-/* src/components/LoginScreen.module.css */
-
-/* Container centers the login form vertically and horizontally */
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-image: url("/images/home-bg.jpg"); /* light gray-blue */
-  background-size: cover;
-  padding: 20px;
-  
-}
-
-.form{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-/* Input fields styling */
-.input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 16px;
-  border: 1px solid #929aa1;
-  border-radius: 15px;
-  border-width: 5px;
-  font-size: 1rem;
-  box-sizing: border-box;
-}
-
-/*buttons*/
-.button{
-    text-align:center;
-  padding: 10px;
-  color:red;
-  margin-top:5px;
-  background-color: white;
-  margin-top: 16px;
-
-}
-.button:hover {
-  background-color: #2b6cb0;
-  transform: scale(1.02);
-}
-
-.backButton{
-  text-align:center;
-  padding: 10px;
-  color:red;
-  margin-top:5px;
-  background-color: white;
-  margin-top: 16px;
-}
-
-.backButton:hover {
-  background-color: #2b6cb0;
-  transform: scale(1.02);
-}
-
-.login_title{
-  font-size: 4rem;
-  color:white;
-  text-align: center;
-}
+/* src/styles/LoginScreen.module.css */
 
 .loginContainer {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: 100vh;
-  background: #2a95a1;
+  align-items: center;
+  min-height: 80vh;
+  background-color: rgba(51, 191, 201, 0.47); /* Replace with your image path */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 20px;
 }
 
-.loginForm {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  gap: 15px;
+.loginCard {
+  background-color: rgba(255, 255, 255, 0.85); /* semi-transparent white */
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
 }
 
-input {
-  padding: 10px;
-  border-radius: 5px;
+.loginCard h2 {
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.loginInput {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 14px;
+  font-size: 1rem;
 }
 
-button {
-  padding: 10px;
-  background-color: #4CAF50;
-  color: rgb(255, 255, 255);
-  font-size: 16px;
-  border: white;
-  border-radius: 10px;
+.loginButton {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #45a049;
-}
-
-.error {
-  color: red;
-  font-size: 14px;
-}
-
-.toggleLink {
-  color: #007bff;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-/* Mobile responsiveness */
-@media (max-width: 480px) {
-  .formWrapper {
-    padding: 20px;
-  }
-  .title {
-    font-size: 1.7rem;
-  }
-  .input {
-    font-size: 0.95rem;
-  }
-  .loginButton {
-    font-size: 1rem;
-  }
+.loginButton:hover {
+  background-color: #0056b3;
 }

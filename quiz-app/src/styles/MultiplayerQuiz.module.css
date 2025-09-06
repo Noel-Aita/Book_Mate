@@ -1,25 +1,16 @@
-/* MultiplayerQuiz.module.css */
-
-.quizContainer {
-  max-width: 700px;
-  margin: 20px auto;
-  padding: 25px;
-  background-color: #670c0c;
+.container {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #12b2d6;
   border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  font-family: 'Arial', sans-serif;
-}
-
-.quizHeading {
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin-bottom: 20px;
 }
 
 .roomInfo {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
+  font-size: 1rem;
+  margin-bottom: 20px;
 }
 
 .playersList {
@@ -28,32 +19,35 @@
   margin-bottom: 20px;
 }
 
-.playersList li {
-  background-color: #e0e0e0;
-  margin: 5px 0;
-  padding: 10px;
+.playerItem {
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  background-color: #add02c;
   border-radius: 8px;
 }
 
-.waitingText {
-  font-size: 1rem;
-  color: #555;
+.waitingMessage {
   font-style: italic;
+  color: #555;
+  margin-top: 15px;
 }
 
 .startButton {
-  margin-top: 20px;
-  padding: 10px 25px;
+  padding: 10px 20px;
   font-size: 1rem;
-  font-weight: bold;
-  background-color: #4CAF50;
-  color: white;
   border: none;
   border-radius: 8px;
+  background-color: #0d6efd;
+  color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.startButton:hover {
-  background-color: #45a049;
+.startButton:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.startButton:hover:enabled {
+  background-color: #084298;
 }

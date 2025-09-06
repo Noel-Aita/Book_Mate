@@ -1,106 +1,76 @@
 // src/components/AuthScreen.jsx
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { login, signup } from "../services/api"; // API calls
-import BlogSection from "./BlogSection";
+import Layout from "./Layout";
+import { AuthContext } from "../context/AuthContext";
+import styles from "../styles/AuthScreen.module.css";
 
 const AuthScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const mode = queryParams.get("mode"); // "login" or "signup"
+  const { login } = useContext(AuthContext);
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(location.state?.username || "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const isSignup = location.state?.isSignup || false;
+
+  const handleAuth = async (e) => {
     e.preventDefault();
     setError("");
 
+    if (!username.trim() || !password) {
+      setError("Username and password are required");
+      return;
+    }
+
     try {
-      let response;
-      if (mode === "login") {
-        response = await login({ username, password });
-      } else {
-        response = await signup({ username, password });
-      }
+      const endpoint = isSignup ? "/signup" : "/login";
+      const res = await fetch(`http://localhost:5000${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-      // Save token locally if needed (optional)
-      localStorage.setItem("token", response.token);
-      localStorage.setItem("username", response.username);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Authentication failed");
 
-      // Navigate to ModeSelect
+      login({ username: data.username });
       navigate("/mode");
     } catch (err) {
-      setError(err.message || "Authentication failed");
+      setError(err.message || "Something went wrong");
     }
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      {/* Main content */}
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "20px",
-        }}
-      >
-        <h1>{mode === "login" ? "Login" : "Signup"}</h1>
-
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-            width: "300px",
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            style={{ padding: "10px", fontSize: "16px" }}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ padding: "10px", fontSize: "16px" }}
-          />
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <button
-            type="submit"
-            style={{
-              padding: "10px",
-              fontSize: "16px",
-              cursor: "pointer",
-              backgroundColor: "#4CAF50",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              transition: "background-color 0.3s",
-            }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#45a049")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#4CAF50")}
-          >
-            {mode === "login" ? "Login" : "Signup"}
-          </button>
-        </form>
+    <Layout>
+      <div className={styles.authContainer}>
+        <div className={styles.authCard}>
+          <h2>{isSignup ? "Signup" : "Login"}</h2>
+          <form onSubmit={handleAuth}>
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className={styles.authInput}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={styles.authInput}
+            />
+            {error && <p className={styles.error}>{error}</p>}
+            <button type="submit" className={styles.authButton}>
+              {isSignup ? "Signup" : "Login"}
+            </button>
+          </form>
+        </div>
       </div>
-
-      {/* Blog Section */}
-      <BlogSection />
-    </div>
+    </Layout>
   );
 };
 

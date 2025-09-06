@@ -1,64 +1,67 @@
 // src/components/PlayerSetupMultiplayer.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Layout from "./Layout";
+import BlogSection from "./BlogSection";
+import styles from "../styles/PlayerSetupMultiplayer.module.css";
+import { initSocket, getSocket } from "../services/socket";
 
 const PlayerSetupMultiplayer = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { category, difficulty } = location.state || {};
+  const { username, category, difficulty } = location.state || {};
 
-  const [username, setUsername] = useState("");
-  const [roomId, setRoomId] = useState("");
+  const [room, setRoom] = useState("");
+  const [socketConnected, setSocketConnected] = useState(false);
 
-  // Generate a new room ID
-  const generateRoomId = () => {
-    const id = Math.floor(100000 + Math.random() * 900000);
-    setRoomId(id.toString());
-  };
-
-  // Join or create room
-  const handleJoin = () => {
-    if (!username || !roomId) {
-      alert("Please enter a username and room ID");
+  useEffect(() => {
+    if (!username) {
+      navigate("/login"); // enforce authentication
       return;
     }
 
-    navigate("/multiplayer", {
-      state: { username, roomId, category, difficulty },
+    const socket = initSocket(username); // pass username for auth
+    setSocketConnected(true);
+
+    socket.on("joinedRoom", (roomName) => {
+      navigate("/multiplayer", {
+        state: { username, room: roomName, category, difficulty },
+      });
     });
+
+    return () => {
+      if (socket) socket.disconnect();
+    };
+  }, [username, navigate, category, difficulty]);
+
+  const handleJoinRoom = () => {
+    if (!room.trim()) {
+      alert("Please enter a room name");
+      return;
+    }
+    const socket = getSocket();
+    socket.emit("joinRoom", room);
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Multiplayer Setup</h2>
-
-      <div style={{ marginBottom: "10px" }}>
-        <label>Username:</label>
+    <Layout>
+      <div
+        className={styles.setupContainer}
+        style={{ backgroundImage: "url('/assets/multiplayer-setup-bg.jpg')" }}
+      >
+        <h2>Welcome, {username}</h2>
         <input
           type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Enter your username"
-          style={{ marginLeft: "10px" }}
+          placeholder="Enter room name"
+          value={room}
+          onChange={(e) => setRoom(e.target.value)}
         />
-      </div>
-
-      <div style={{ marginBottom: "10px" }}>
-        <label>Room ID:</label>
-        <input
-          type="text"
-          value={roomId}
-          onChange={(e) => setRoomId(e.target.value)}
-          placeholder="Enter existing room ID"
-          style={{ marginLeft: "10px" }}
-        />
-        <button onClick={generateRoomId} style={{ marginLeft: "10px" }}>
-          Create New Room
+        <button onClick={handleJoinRoom} disabled={!socketConnected}>
+          Join Room
         </button>
       </div>
-
-      <button onClick={handleJoin}>Join Room</button>
-    </div>
+      <BlogSection />
+    </Layout>
   );
 };
 

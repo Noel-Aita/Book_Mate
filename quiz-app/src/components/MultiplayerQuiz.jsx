@@ -1,68 +1,95 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+// src/components/MultiPlayerQuiz.jsx
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Layout from "./Layout";
-import localQuestions from "../data/localQuestions";
+import BlogSection from "./BlogSection";
+import styles from "../styles/MultiPlayerQuiz.module.css";
+import { getSocket } from "../services/socket";
+import { localQuestions } from "../data/localQuestions";
 
-const MultiplayerQuiz = () => {
+const MultiPlayerQuiz = () => {
+  const navigate = useNavigate();
   const location = useLocation();
-  const { username, roomId } = location.state || {};
-  const [players, setPlayers] = useState([username]);
-  const [currentPlayer, setCurrentPlayer] = useState(username);
-  const [questions] = useState(localQuestions); // use local questions
+  const { username, room, category, difficulty } = location.state || {};
+
+  const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState("");
-  const [answers, setAnswers] = useState({}); // store player answers
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
-    // This is where socket logic would go
-    console.log(`Player ${username} joined room ${roomId}`);
-  }, [username, roomId]);
+    if (!username || !room) {
+      navigate("/login"); // enforce authentication
+      return;
+    }
+
+    const filteredQuestions = localQuestions.filter(
+      (q) => q.category === category && q.difficulty === difficulty
+    );
+
+    setQuestions(filteredQuestions);
+
+    const socket = getSocket();
+
+    socket.on("nextQuestion", (index) => {
+      setCurrentIndex(index);
+    });
+
+    socket.on("endQuiz", (finalScores) => {
+      navigate("/results", {
+        state: { username, score, total: questions.length, multiplayer: true, finalScores },
+      });
+    });
+
+    return () => {
+      socket.off("nextQuestion");
+      socket.off("endQuiz");
+    };
+  }, [username, room, category, difficulty, navigate]);
+
+  const handleAnswer = (answer) => {
+    const socket = getSocket();
+    const correct = questions[currentIndex].correct_answer === answer;
+    if (correct) setScore(score + 1);
+
+    socket.emit("submitAnswer", { username, room, answer, correct });
+
+    // Move to next question locally for single view; server can sync for multiplayer
+    if (currentIndex + 1 < questions.length) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      socket.emit("finishQuiz", { username, room, score });
+    }
+  };
+
+  if (!questions.length) return <p>Loading questions...</p>;
 
   const currentQuestion = questions[currentIndex];
-  const options = [...currentQuestion.incorrect_answers, currentQuestion.correct_answer].sort(
-    () => Math.random() - 0.5
-  );
-
-  const handleAnswer = (opt) => {
-    setSelectedOption(opt);
-    setAnswers((prev) => ({ ...prev, [username]: opt }));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => prev + 1);
-    setSelectedOption("");
-  };
 
   return (
     <Layout>
-      <div>
-        <h2>Multiplayer Quiz</h2>
-        <p>Room: {roomId}</p>
-        <p>Players in room: {players.join(", ")}</p>
-        <p>Current Player: {currentPlayer}</p>
-
-        <div>
-          <h3>{currentQuestion.question}</h3>
-          <ul>
-            {options.map((opt, idx) => (
-              <li key={idx}>
-                <button
-                  onClick={() => handleAnswer(opt)}
-                  disabled={!!selectedOption}
-                  style={{ backgroundColor: selectedOption === opt ? "#4CAF50" : "#eee" }}
-                >
-                  {opt}
-                </button>
-              </li>
+      <div
+        className={styles.quizContainer}
+        style={{ backgroundImage: "url('/assets/multiplayer-bg.jpg')" }}
+      >
+        <h2>Room: {room}</h2>
+        <h3>
+          Question {currentIndex + 1}/{questions.length}
+        </h3>
+        <p>{currentQuestion.question}</p>
+        <div className={styles.answers}>
+          {currentQuestion.incorrect_answers
+            .concat(currentQuestion.correct_answer)
+            .sort()
+            .map((answer, idx) => (
+              <button key={idx} onClick={() => handleAnswer(answer)}>
+                {answer}
+              </button>
             ))}
-          </ul>
-          <button onClick={handleNext} disabled={!selectedOption || currentIndex + 1 >= questions.length}>
-            Next
-          </button>
         </div>
       </div>
+      <BlogSection />
     </Layout>
   );
 };
 
-export default MultiplayerQuiz;
+export default MultiPlayerQuiz;
