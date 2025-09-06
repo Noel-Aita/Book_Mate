@@ -1,3 +1,4 @@
+// src/components/LoginScreen.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/LoginScreen.module.css";
@@ -23,10 +24,12 @@ const LoginScreen = () => {
       });
 
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.message || "Authentication failed");
 
-      navigate("/select");
+      // Save token if needed
+      // localStorage.setItem("token", data.token);
+
+      navigate("/select"); // go to mode selection
     } catch (err) {
       setError(err.message);
     }
@@ -55,10 +58,7 @@ const LoginScreen = () => {
       </form>
       <p>
         {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-        <span
-          className={styles.toggleLink}
-          onClick={() => setIsLogin(!isLogin)}
-        >
+        <span onClick={() => setIsLogin(!isLogin)} className={styles.toggleLink}>
           {isLogin ? "Signup" : "Login"}
         </span>
       </p>

@@ -1,36 +1,63 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import localQuestions from "../data/localQuestions";
+// src/components/SinglePlayerQuiz.jsx
+import React, { useEffect, useState } from "react";
+import Layout from "./Layout";
+import localQuestions from "../data/localQuestions.js";
 
-const SinglePlayerQuiz = ({ username }) => {
-  const navigate = useNavigate();
-  const [index, setIndex] = useState(0);
-  const [score, setScore] = useState(0);
+const SinglePlayerQuiz = () => {
+  const [questions, setQuestions] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState("");
 
-  const question = localQuestions[index];
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/questions");
+        if (!res.ok) throw new Error("Server error: " + res.status);
+        const data = await res.json();
+        setQuestions(data);
+      } catch (err) {
+        console.error("API fetch failed, using fallback:", err);
+        setQuestions(localQuestions);
+      }
+    };
+    fetchQuestions();
+  }, []);
 
-  const handleAnswer = (answer) => {
-    if (answer === question.correct) {
-      setScore(score + 1);
-    }
+  if (!questions.length) return <Layout><p>Loading questions...</p></Layout>;
 
-    if (index + 1 < localQuestions.length) {
-      setIndex(index + 1);
-    } else {
-      navigate("/results", { state: { score, total: localQuestions.length, username } });
-    }
-  };
+  const currentQuestion = questions[currentIndex];
+  const options = [...currentQuestion.incorrect_answers, currentQuestion.correct_answer].sort(
+    () => Math.random() - 0.5
+  );
 
   return (
-    <div>
-      <h2>Quiz for {username}</h2>
-      <p>{question.question}</p>
-      {question.options.map((opt, i) => (
-        <button key={i} onClick={() => handleAnswer(opt)}>
-          {opt}
+    <Layout>
+      <div>
+        <h2>{currentQuestion.question}</h2>
+        <ul>
+          {options.map((opt, idx) => (
+            <li key={idx}>
+              <button
+                onClick={() => setSelectedOption(opt)}
+                disabled={!!selectedOption}
+                style={{ backgroundColor: selectedOption === opt ? "#4CAF50" : "#eee" }}
+              >
+                {opt}
+              </button>
+            </li>
+          ))}
+        </ul>
+        <button
+          onClick={() => {
+            setCurrentIndex((prev) => prev + 1);
+            setSelectedOption("");
+          }}
+          disabled={!selectedOption}
+        >
+          Next
         </button>
-      ))}
-    </div>
+      </div>
+    </Layout>
   );
 };
 

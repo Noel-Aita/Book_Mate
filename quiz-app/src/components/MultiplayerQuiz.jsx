@@ -1,38 +1,33 @@
+// src/components/MultiplayerQuiz.jsx
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { connectSocket } from "../services/socket";
 import Layout from "./Layout";
 
 const MultiplayerQuiz = () => {
   const location = useLocation();
   const { username, roomId } = location.state || {};
-  const [players, setPlayers] = useState([]);
-  const [message, setMessage] = useState("");
+  const [players, setPlayers] = useState([username]);
+  const [currentPlayer, setCurrentPlayer] = useState(username);
 
   useEffect(() => {
-    const socket = connectSocket();
+    // Basic demo: simulate another player joining after 3s
+    const timer = setTimeout(() => {
+      setPlayers((prev) => [...prev, "Econi"]);
+    }, 3000);
 
-    socket.emit("joinRoom", { username, roomId });
+    console.log(`Player ${username} joined room ${roomId}`);
 
-    socket.on("updatePlayers", (players) => setPlayers(players));
-    socket.on("nextQuestion", (question) => setMessage(question));
-
-    return () => socket.disconnect();
+    return () => clearTimeout(timer);
   }, [username, roomId]);
 
   return (
     <Layout>
-      <div>
+      <div style={{ padding: "20px" }}>
         <h2>Multiplayer Quiz</h2>
-        <p>Room: {roomId}</p>
-        <p>Player: {username}</p>
-        <p>Waiting for more players...</p>
-        <ul>
-          {players.map((p) => (
-            <li key={p}>{p}</li>
-          ))}
-        </ul>
-        {message && <p>Next question: {message}</p>}
+        <p>Room ID: {roomId}</p>
+        <p>Players in Room: {players.join(", ")}</p>
+        <p>Current Player: {currentPlayer}</p>
+        <p>Waiting for more players... (basic demo)</p>
       </div>
     </Layout>
   );
