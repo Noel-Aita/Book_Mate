@@ -1,6 +1,5 @@
 // src/components/BlogSection.jsx
 import React, { useEffect, useState } from "react";
-import styles from "../styles/BlogSection.module.css";
 
 const BlogSection = () => {
   const [blogs, setBlogs] = useState([]);
@@ -9,28 +8,36 @@ const BlogSection = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        // Example using GNews API (replace with your API key)
-        const res = await fetch(
-          `https://gnews.io/api/v4/search?q=education&lang=en&max=5&apikey=YOUR_API_KEY`
-        );
+        // Example: Using free educational blog API or RSS feed
+        const res = await fetch("https://api.spaceflightnewsapi.net/v3/articles?_limit=5");
         if (!res.ok) throw new Error("Failed to fetch blogs");
         const data = await res.json();
-        setBlogs(data.articles || []);
+
+        // Map to our structure
+        const formatted = data.map((item) => ({
+          title: item.title,
+          url: item.url,
+          image: item.imageUrl || "",
+          summary: item.summary,
+        }));
+
+        setBlogs(formatted);
       } catch (err) {
-        console.error("Failed to fetch blogs:", err);
-        // fallback dummy blogs
+        console.error("Failed to fetch blogs, using fallback:", err);
+
+        // Fallback blogs if API fails
         setBlogs([
           {
-            title: "Learn React in 2025",
-            description: "A comprehensive guide to React development for beginners.",
+            title: "Fallback Blog 1",
             url: "#",
             image: "",
+            summary: "This is a fallback blog summary.",
           },
           {
-            title: "Top 10 JavaScript Tips",
-            description: "Enhance your JS skills with these pro tips.",
+            title: "Fallback Blog 2",
             url: "#",
             image: "",
+            summary: "This is another fallback blog summary.",
           },
         ]);
       } finally {
@@ -41,28 +48,26 @@ const BlogSection = () => {
     fetchBlogs();
   }, []);
 
-  if (loading) return <p>Loading educational blogs...</p>;
+  if (loading) return <p>Loading blogs...</p>;
 
   return (
-    <div className={styles.blogContainer}>
+    <div style={{ marginTop: 30 }}>
       <h3>Educational Blogs</h3>
-      <div className={styles.blogList}>
+      <ul>
         {blogs.map((blog, idx) => (
-          <a
-            key={idx}
-            href={blog.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.blogItem}
-          >
-            {blog.image && <img src={blog.image} alt={blog.title} className={styles.blogImage} />}
-            <div>
-              <h4>{blog.title}</h4>
-              <p>{blog.description}</p>
-            </div>
-          </a>
+          <li key={idx} style={{ marginBottom: 15 }}>
+            <a
+              href={blog.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none", color: "#2196F3" }}
+            >
+              <strong>{blog.title}</strong>
+            </a>
+            <p>{blog.summary.slice(0, 100)}...</p>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 };

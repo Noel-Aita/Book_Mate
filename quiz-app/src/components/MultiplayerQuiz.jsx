@@ -7,148 +7,84 @@ const MultiplayerQuiz = ({ setup, category, difficulty }) => {
   const { username, roomId } = setup;
   const [socket, setSocket] = useState(null);
   const [players, setPlayers] = useState([]);
-  const [currentQuestion, setCurrentQuestion] = useState(null);
   const [currentPlayerId, setCurrentPlayerId] = useState(null);
+  const [question, setQuestion] = useState(null);
   const [selectedOption, setSelectedOption] = useState("");
-  const [nextQuestionOptions, setNextQuestionOptions] = useState([]);
 
+  // Connect to socket
   useEffect(() => {
-    const s = connectSocket(username);
-    setSocket(s);
+    const sock = connectSocket(username);
+    setSocket(sock);
 
-    s.emit("joinRoom", roomId);
+    sock.emit("joinRoom", roomId);
 
-    // Listen for players updates
-    s.on("playersUpdate", (updatedPlayers) => {
+    sock.on("playersUpdate", (updatedPlayers) => {
       setPlayers(updatedPlayers);
     });
 
-    // Listen for quiz start
-    s.on("quizStarted", ({ currentPlayerId, question }) => {
-      setCurrentPlayerId(currentPlayerId);
-      setCurrentQuestion(question);
-      generateNextQuestionOptions(question);
+    sock.on("quizStarted", (data) => {
+      setCurrentPlayerId(data.currentPlayerId);
+      setQuestion(data.question);
     });
 
-    // Listen for next turn
-    s.on("nextTurn", ({ currentPlayerId, question }) => {
-      setCurrentPlayerId(currentPlayerId);
-      setCurrentQuestion(question);
+    sock.on("nextTurn", (data) => {
+      setCurrentPlayerId(data.currentPlayerId);
+      setQuestion(data.question);
       setSelectedOption("");
-      generateNextQuestionOptions(question);
     });
 
-    // Listen for quiz end
-    s.on("quizEnded", (finalPlayers) => {
-      alert("Quiz ended! Check console for final scores.");
-      console.log("Final Scores:", finalPlayers);
+    sock.on("quizEnded", (finalPlayers) => {
+      alert("Quiz ended! Check the results.");
+      // You can navigate to ResultScreen here
     });
 
-    return () => s.disconnect();
-    // eslint-disable-next-line
-  }, []);
+    return () => {
+      sock.disconnect();
+    };
+  }, [username, roomId]);
 
-  const generateNextQuestionOptions = (currentQ) => {
-    // For simplicity, pick 4 random questions including current one
-    const options = localQuestions
-      .filter((q) => q.question !== currentQ.question)
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 3);
-    options.push(currentQ);
-    setNextQuestionOptions(options.sort(() => 0.5 - Math.random()));
-  };
+  if (!question) return <p>Waiting for quiz to start...</p>;
 
-  const handleAnswer = (option) => {
-    if (!socket || !currentQuestion) return;
-
-    setSelectedOption(option);
-
-    socket.emit("answerQuestion", {
-      roomId,
-      answer: option,
-    });
-  };
-
-  const handleSelectNextQuestion = (question) => {
-    // Only current player can select next question
-    if (currentPlayerId !== socket.id) return;
-
-    socket.emit("startQuiz", {
-      roomId,
-      questions: [question, ...localQuestions.filter((q) => q.question !== question).slice(0, 4)],
-    });
-  };
-
-  if (!currentQuestion) return <p>Waiting for quiz to start...</p>;
-
-  const options = [...currentQuestion.incorrect_answers, currentQuestion.correct_answer].sort(
+  const options = [...question.incorrect_answers, question.correct_answer].sort(
     () => Math.random() - 0.5
   );
 
-  useEffect(() => {
-  if (!socket) return;
-
-  socket.on("quizEnded", (finalPlayers) => {
-    console.log("Final Scores:", finalPlayers);
-    // Navigate to ResultScreen
-    navigate("/result", {
-      state: { mode: "multi", players: finalPlayers },
-    });
-  });
-    }, [socket, navigate]);
+  const handleAnswer = (opt) => {
+    setSelectedOption(opt);
+    socket.emit("answerQuestion", { roomId, answer: opt });
+  };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Room ID: {roomId}</h2>
-
+    <div>
+      <h3>Room: {roomId}</h3>
       <div>
-        <h3>Players:</h3>
+        <h4>Players:</h4>
         <ul>
           {players.map((p) => (
             <li key={p.username}>
-              {p.username} - {p.score} {p.username === username ? "(You)" : ""}
-              {p.socketId === currentPlayerId ? " 🔹 answering" : ""}
+              {p.username} - {p.score}{" "}
+              {p.username === currentPlayerId ? "(Current Player)" : ""}
             </li>
           ))}
         </ul>
       </div>
 
-      <div>
-        <h3>{currentQuestion.question}</h3>
-        <ul>
-          {options.map((opt, idx) => (
-            <li key={idx}>
-              <button
-                onClick={() => handleAnswer(opt)}
-                disabled={selectedOption !== "" || currentPlayerId !== socket.id}
-                style={{
-                  backgroundColor: selectedOption === opt ? "#4CAF50" : "#eee",
-                  marginBottom: "5px",
-                  padding: "8px 12px",
-                  borderRadius: 5,
-                  cursor: selectedOption === "" && currentPlayerId === socket.id ? "pointer" : "not-allowed",
-                }}
-              >
-                {opt}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Current player can select next question */}
-      {selectedOption === currentQuestion.correct_answer && currentPlayerId === socket.id && (
-        <div>
-          <h4>Select Next Question for next player:</h4>
-          <ul>
-            {nextQuestionOptions.map((q, idx) => (
-              <li key={idx}>
-                <button onClick={() => handleSelectNextQuestion(q)}>{q.question}</button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <h2>{question.question}</h2>
+      <ul>
+        {options.map((opt, idx) => (
+          <li key={idx}>
+            <button
+              disabled={selectedOption || currentPlayerId !== username}
+              onClick={() => handleAnswer(opt)}
+              style={{
+                backgroundColor: selectedOption === opt ? "#4CAF50" : "#eee",
+              }}
+            >
+              {opt}
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

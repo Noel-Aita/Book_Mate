@@ -1,32 +1,26 @@
 // src/components/SinglePlayerQuiz.jsx
 import React, { useEffect, useState } from "react";
-import localQuestions from "../data/localQuestions.js";
 import { useNavigate } from "react-router-dom";
-
-const navigate = useNavigate();
+import localQuestions from "../data/localQuestions.js";
 
 const SinglePlayerQuiz = ({ category, difficulty }) => {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState("");
+  const [score, setScore] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        // Example API endpoint; replace with real API if available
-        const res = await fetch(
-          `http://localhost:5000/api/questions?category=${encodeURIComponent(
-            category
-          )}&difficulty=${encodeURIComponent(difficulty)}`
-        );
+        // Example API fetch — can filter by category/difficulty if API supports
+        const res = await fetch(`http://localhost:5000/api/questions?category=${category}&difficulty=${difficulty}`);
         if (!res.ok) throw new Error("Server error: " + res.status);
         const data = await res.json();
         setQuestions(data);
       } catch (err) {
         console.error("API fetch failed, using fallback questions:", err);
-
-        // Filter local questions by category/difficulty if available
-        // For now, assuming localQuestions do not have these fields
+        // Filter localQuestions by category/difficulty if you implement tags
         setQuestions(localQuestions);
       }
     };
@@ -41,40 +35,29 @@ const SinglePlayerQuiz = ({ category, difficulty }) => {
     () => Math.random() - 0.5
   );
 
-    const handleNext = () => {
-    if (currentIndex >= questions.length - 1) {
-        // Quiz finished, navigate to ResultScreen
-        navigate("/result", {
-        state: { mode: "single", score: selectedOption === currentQuestion.correct_answer ? currentIndex + 1 : currentIndex, total: questions.length },
-        });
+  const handleNext = () => {
+    if (selectedOption === currentQuestion.correct_answer) setScore(score + 1);
+
+    if (currentIndex + 1 < questions.length) {
+      setCurrentIndex(currentIndex + 1);
+      setSelectedOption("");
     } else {
-        setCurrentIndex((prev) => prev + 1);
-        setSelectedOption("");
+      // Quiz finished → navigate to ResultScreen
+      navigate("/result", { state: { score, total: questions.length } });
     }
-    };
-
-    // Replace Next button onClick
-    <button onClick={handleNext} disabled={!selectedOption}>
-    {currentIndex >= questions.length - 1 ? "Finish Quiz" : "Next"}
-    </button>
-
-
+  };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div>
       <h2>{currentQuestion.question}</h2>
-      <ul style={{ listStyle: "none", padding: 0 }}>
+      <ul>
         {options.map((opt, idx) => (
-          <li key={idx} style={{ marginBottom: "10px" }}>
+          <li key={idx}>
             <button
-              onClick={() => setSelectedOption(opt)}
               disabled={!!selectedOption}
+              onClick={() => setSelectedOption(opt)}
               style={{
-                padding: "10px 15px",
-                borderRadius: 5,
-                border: "1px solid #ccc",
                 backgroundColor: selectedOption === opt ? "#4CAF50" : "#eee",
-                cursor: !!selectedOption ? "not-allowed" : "pointer",
               }}
             >
               {opt}
@@ -82,23 +65,8 @@ const SinglePlayerQuiz = ({ category, difficulty }) => {
           </li>
         ))}
       </ul>
-
-      <button
-        onClick={() => {
-          setCurrentIndex((prev) => prev + 1);
-          setSelectedOption("");
-        }}
-        disabled={!selectedOption || currentIndex >= questions.length - 1}
-        style={{
-          padding: "10px 20px",
-          borderRadius: 5,
-          border: "none",
-          backgroundColor: "#2196F3",
-          color: "#fff",
-          cursor: !selectedOption || currentIndex >= questions.length - 1 ? "not-allowed" : "pointer",
-        }}
-      >
-        {currentIndex >= questions.length - 1 ? "Finish Quiz" : "Next"}
+      <button onClick={handleNext} disabled={!selectedOption}>
+        Next
       </button>
     </div>
   );

@@ -1,50 +1,40 @@
 // src/components/ResultScreen.jsx
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import BlogSection from "./BlogSection";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ResultScreen = () => {
-  const navigate = useNavigate();
   const location = useLocation();
-  const state = location.state || {};
-  const { mode, score, total, players } = state; // multiplayer: players array, single: score & total
+  const navigate = useNavigate();
 
-  const handleHome = () => {
-    navigate("/");
-  };
+  // Get score and total questions from state
+  const { score, total } = location.state || { score: 0, total: 0 };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", padding: "20px" }}>
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        <h2>Quiz Results</h2>
+    <div style={{ padding: 20 }}>
+      <h2>Quiz Completed!</h2>
+      <p>
+        You scored {score} out of {total}
+      </p>
 
-        {mode === "single" && (
-          <div style={{ marginTop: 20 }}>
-            <p>
-              You scored <strong>{score}</strong> out of <strong>{total}</strong>
-            </p>
-          </div>
-        )}
-
-        {mode === "multi" && players && (
-          <div style={{ marginTop: 20 }}>
-            <h3>Players Scores:</h3>
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              {players
-                .sort((a, b) => b.score - a.score)
-                .map((p, idx) => (
-                  <li key={idx} style={{ marginBottom: "10px" }}>
-                    {p.username} - {p.score} {p.username === "You" ? "(You)" : ""}
-                  </li>
-                ))}
-            </ul>
-          </div>
-        )}
+      <div style={{ marginTop: 20 }}>
+        <button
+          onClick={() => navigate("/home")}
+          style={{
+            padding: "10px 20px",
+            marginRight: 10,
+            borderRadius: 5,
+            border: "none",
+            backgroundColor: "#2196F3",
+            color: "#fff",
+            cursor: "pointer",
+          }}
+        >
+          Home
+        </button>
 
         <button
-          onClick={handleHome}
+          onClick={() => navigate("/select")}
           style={{
-            marginTop: 30,
             padding: "10px 20px",
             borderRadius: 5,
             border: "none",
@@ -53,12 +43,9 @@ const ResultScreen = () => {
             cursor: "pointer",
           }}
         >
-          Back to Home
+          Restart Quiz
         </button>
       </div>
-
-      {/* BlogSection visible on all pages except ResultScreen */}
-      {/* Not displayed here as per design */}
     </div>
   );
 };
