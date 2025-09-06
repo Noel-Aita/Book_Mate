@@ -1,6 +1,7 @@
 // src/components/SplashScreen.jsx
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "../styles/SplashScreen.module.css";
 
 const SplashScreen = () => {
   const navigate = useNavigate();
@@ -15,40 +16,13 @@ const SplashScreen = () => {
   }, [navigate]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        backgroundColor: "#2196F3",
-        color: "#fff",
-      }}
-    >
+    <div className={styles.splashContainer}>
       {/* Placeholder animation */}
-      <div
-        style={{
-          width: 100,
-          height: 100,
-          border: "5px solid #fff",
-          borderTop: "5px solid #e0f7fa",
-          borderRadius: "50%",
-          animation: "spin 2s linear infinite",
-          marginBottom: 20,
-        }}
-      ></div>
-
-      <h1>Book Mate Quiz</h1>
-
-      <style>
-        {`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}
-      </style>
+      <div className={styles.logo}>
+        {/* Example animation: spinning circle */}
+        <div className={styles.spinner}></div>
+        <h1>BookMate Quiz App</h1>
+      </div>
     </div>
   );
 };

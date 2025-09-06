@@ -1,68 +1,65 @@
 // src/App.jsx
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import SplashScreen from "./components/SplashScreen";
 import HomeScreen from "./components/HomeScreen";
 import LoginScreen from "./components/LoginScreen";
-import QuizScreen from "./components/QuizScreen";
-import ResultScreen from "./components/ResultScreen";
-import PlayerSetupMultiplayer from "./components/PlayerSetupMultiplayer";
+import ModeSelect from "./components/ModeSelect";
 import CategoryDifficultySelect from "./components/CategoryDifficultySelect";
+import QuizScreen from "./components/QuizScreen";
+import PlayerSetupMultiplayer from "./components/PlayerSetupMultiplayer";
+import ResultScreen from "./components/ResultScreen";
+import BlogSection from "./components/BlogSection";
 
 const App = () => {
-  const [user, setUser] = useState(null); // store authenticated user info
-  const [quizSetup, setQuizSetup] = useState({ mode: null, category: null, difficulty: null });
+  const [user, setUser] = useState(null); // logged-in user info
 
   return (
     <Router>
-      <Routes>
-        {/* Splash → Home */}
-        <Route path="/" element={<SplashScreen />} />
+      <div>
+        {/* Render BlogSection on all pages except ResultScreen */}
+        <Routes>
+          <Route
+            path="/result"
+            element={null} // no BlogSection
+          />
+          <Route
+            path="*"
+            element={<BlogSection />}
+          />
+        </Routes>
 
-        {/* Home screen */}
-        <Route path="/home" element={<HomeScreen />} />
-
-        {/* Login / Signup */}
-        <Route path="/login" element={<LoginScreen onAuth={setUser} />} />
-
-        {/* Category and Difficulty selection for both modes */}
-        <Route
-          path="/select"
-          element={
-            <CategoryDifficultySelect
-              setup={quizSetup}
-              setSetup={setQuizSetup}
-            />
-          }
-        />
-
-        {/* Multiplayer Player Setup */}
-        <Route
-          path="/multiplayer-setup"
-          element={
-            <PlayerSetupMultiplayer
-              onSetup={(data) => setQuizSetup({ ...quizSetup, ...data, mode: "multi" })}
-            />
-          }
-        />
-
-        {/* Quiz Screen (Single or Multiplayer) */}
-        <Route
-          path="/quiz"
-          element={
-            <QuizScreen
-              mode={quizSetup.mode}
-              setup={quizSetup}
-              category={quizSetup.category}
-              difficulty={quizSetup.difficulty}
-            />
-          }
-        />
-
-        {/* Result Screen */}
-        <Route path="/result" element={<ResultScreen />} />
-      </Routes>
+        <Routes>
+          <Route path="/" element={<SplashScreen />} />
+          <Route path="/home" element={<HomeScreen />} />
+          <Route
+            path="/login"
+            element={<LoginScreen onAuth={setUser} />}
+          />
+          <Route
+            path="/select"
+            element={<ModeSelect user={user} />}
+          />
+          <Route
+            path="/category"
+            element={<CategoryDifficultySelect user={user} />}
+          />
+          <Route
+            path="/player-setup-multiplayer"
+            element={<PlayerSetupMultiplayer onSetup={() => {}} />}
+          />
+          <Route
+            path="/quiz"
+            element={<QuizScreen user={user} />}
+          />
+          <Route
+            path="/result"
+            element={<ResultScreen />}
+          />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
     </Router>
   );
 };

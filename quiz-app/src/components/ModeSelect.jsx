@@ -6,42 +6,44 @@ const ModeSelect = ({ user }) => {
   const navigate = useNavigate();
 
   if (!user) {
-    // Prevent navigation if not logged in
-    navigate("/login");
-    return null;
+    return <p>Please login to select a mode.</p>;
   }
 
-  return (
-    <div style={{ padding: 20 }}>
-      <h2>Welcome, {user.username}!</h2>
-      <p>Select Quiz Mode:</p>
+  const handleSelect = (mode) => {
+    // Pass mode to next screen
+    navigate("/category", { state: { mode } });
+  };
 
+  return (
+    <div style={{ padding: 20, textAlign: "center" }}>
+      <h2>Select Game Mode</h2>
       <div style={{ marginTop: 20 }}>
         <button
-          onClick={() => navigate("/select-category", { state: { mode: "single" } })}
           style={{
             padding: "10px 20px",
             marginRight: 10,
-            borderRadius: 5,
-            border: "none",
             backgroundColor: "#4CAF50",
             color: "#fff",
+            border: "none",
+            borderRadius: 5,
             cursor: "pointer",
           }}
+          onClick={() => handleSelect("single")}
         >
           Single Player
         </button>
 
         <button
-          onClick={() => navigate("/player-setup-multiplayer")}
           style={{
             padding: "10px 20px",
-            borderRadius: 5,
-            border: "none",
+            marginLeft: 10,
             backgroundColor: "#2196F3",
             color: "#fff",
+            border: "none",
+            borderRadius: 5,
             cursor: "pointer",
           }}
+          onClick={() => handleSelect("multi")}
         >
           Multiplayer
         </button>

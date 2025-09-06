@@ -2,88 +2,70 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+const categories = [
+  "General Knowledge",
+  "Science",
+  "Mathematics",
+  "History",
+  "Programming",
+];
+
+const difficulties = ["easy", "medium", "hard"];
+
 const CategoryDifficultySelect = ({ user }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const mode = location.state?.mode || "single"; // default to single
 
-  // mode passed from previous screen: "single" or "multiplayer"
-  const { mode } = location.state || {};
+  const [category, setCategory] = useState(categories[0]);
+  const [difficulty, setDifficulty] = useState(difficulties[0]);
 
-  const [category, setCategory] = useState("General Knowledge");
-  const [difficulty, setDifficulty] = useState("easy");
+  if (!user) return <p>Please login to select category and difficulty.</p>;
 
-  const categories = [
-    "General Knowledge",
-    "Science",
-    "Math",
-    "History",
-    "Programming",
-  ];
-
-  const difficulties = ["easy", "medium", "hard"];
-
-  const handleStartQuiz = () => {
+  const handleStart = () => {
     if (mode === "single") {
       navigate("/quiz", { state: { mode, category, difficulty } });
-    } else if (mode === "multiplayer") {
-      navigate("/player-setup-multiplayer", { state: { category, difficulty } });
+    } else if (mode === "multi") {
+      navigate("/player-setup-multiplayer", { state: { mode, category, difficulty } });
     }
   };
 
-  if (!user) {
-    navigate("/login");
-    return null;
-  }
-
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: 20, textAlign: "center" }}>
       <h2>Select Category & Difficulty</h2>
 
-      <div style={{ marginTop: 20 }}>
+      <div style={{ margin: "20px 0" }}>
         <label>
           Category:
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            style={{ marginLeft: 10, padding: 5 }}
-          >
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
             {categories.map((cat, idx) => (
-              <option key={idx} value={cat}>
-                {cat}
-              </option>
+              <option key={idx} value={cat}>{cat}</option>
             ))}
           </select>
         </label>
       </div>
 
-      <div style={{ marginTop: 20 }}>
+      <div style={{ margin: "20px 0" }}>
         <label>
           Difficulty:
-          <select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-            style={{ marginLeft: 10, padding: 5 }}
-          >
-            {difficulties.map((dif, idx) => (
-              <option key={idx} value={dif}>
-                {dif}
-              </option>
+          <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+            {difficulties.map((diff, idx) => (
+              <option key={idx} value={diff}>{diff}</option>
             ))}
           </select>
         </label>
       </div>
 
       <button
-        onClick={handleStartQuiz}
         style={{
           padding: "10px 20px",
-          marginTop: 20,
-          borderRadius: 5,
-          border: "none",
           backgroundColor: "#4CAF50",
           color: "#fff",
+          border: "none",
+          borderRadius: 5,
           cursor: "pointer",
         }}
+        onClick={handleStart}
       >
         Start Quiz
       </button>

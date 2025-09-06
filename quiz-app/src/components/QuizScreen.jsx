@@ -1,33 +1,29 @@
 // src/components/QuizScreen.jsx
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import SinglePlayerQuiz from "./SinglePlayerQuiz";
-import MultiplayerQuiz from "./MultiplayerQuiz";
-import BlogSection from "./BlogSection";
+import PlayerSetupMultiplayer from "./PlayerSetupMultiplayer";
 
-const QuizScreen = ({ mode, setup }) => {
-  const { category, difficulty } = setup;
+const QuizScreen = ({ user }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const mode = location.state?.mode;
+
+  if (!user) {
+    return <p>Please login to play the quiz.</p>;
+  }
 
   if (!mode) {
-    return <p>Please select a mode before starting the quiz.</p>;
+    // If mode not set, go back to mode selection
+    navigate("/select");
+    return null;
   }
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>
-        {mode === "single" ? "Single Player Quiz" : "Multiplayer Quiz"}
-      </h2>
-      <p>Category: {category || "N/A"} | Difficulty: {difficulty || "N/A"}</p>
-
-      {/* Render appropriate quiz mode */}
-      {mode === "single" && (
-        <SinglePlayerQuiz category={category} difficulty={difficulty} />
-      )}
-      {mode === "multi" && (
-        <MultiplayerQuiz setup={setup} category={category} difficulty={difficulty} />
-      )}
-
-      {/* Blog Section */}
-      <BlogSection />
+    <div>
+      {mode === "single" && <SinglePlayerQuiz />}
+      {mode === "multi" && <PlayerSetupMultiplayer onSetup={() => {}} />}
     </div>
   );
 };

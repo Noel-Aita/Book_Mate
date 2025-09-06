@@ -6,44 +6,69 @@ const ResultScreen = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Get score and total questions from state
-  const { score, total } = location.state || { score: 0, total: 0 };
+  const { score, players, multiplayer } = location.state || {};
+
+  // Determine if single or multiplayer
+  const isMultiplayer = multiplayer && Array.isArray(players);
+
+  const handleRestart = () => {
+    navigate("/select"); // Back to mode selection
+  };
+
+  const handleHome = () => {
+    navigate("/home"); // Back to home screen
+  };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Quiz Completed!</h2>
-      <p>
-        You scored {score} out of {total}
-      </p>
+    <div style={{ padding: 20, textAlign: "center" }}>
+      <h2>Quiz Results</h2>
+
+      {isMultiplayer ? (
+        <div>
+          <h3>Multiplayer Scores:</h3>
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            {players
+              .sort((a, b) => b.score - a.score)
+              .map((p, idx) => (
+                <li key={idx} style={{ margin: "10px 0" }}>
+                  {idx + 1}. {p.username}: {p.score}
+                </li>
+              ))}
+          </ul>
+        </div>
+      ) : (
+        <div>
+          <h3>Your Score: {score}</h3>
+        </div>
+      )}
 
       <div style={{ marginTop: 20 }}>
         <button
-          onClick={() => navigate("/home")}
+          onClick={handleRestart}
           style={{
             padding: "10px 20px",
             marginRight: 10,
-            borderRadius: 5,
-            border: "none",
             backgroundColor: "#2196F3",
             color: "#fff",
+            border: "none",
+            borderRadius: 5,
+            cursor: "pointer",
+          }}
+        >
+          Play Again
+        </button>
+        <button
+          onClick={handleHome}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#4CAF50",
+            color: "#fff",
+            border: "none",
+            borderRadius: 5,
             cursor: "pointer",
           }}
         >
           Home
-        </button>
-
-        <button
-          onClick={() => navigate("/select")}
-          style={{
-            padding: "10px 20px",
-            borderRadius: 5,
-            border: "none",
-            backgroundColor: "#4CAF50",
-            color: "#fff",
-            cursor: "pointer",
-          }}
-        >
-          Restart Quiz
         </button>
       </div>
     </div>

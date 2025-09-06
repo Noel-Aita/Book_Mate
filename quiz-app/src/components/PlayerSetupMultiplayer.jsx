@@ -3,85 +3,66 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { connectSocket } from "../services/socket";
 
-const PlayerSetupMultiplayer = () => {
+const PlayerSetupMultiplayer = ({ user }) => {
+  const [roomId, setRoomId] = useState("");
+  const [players, setPlayers] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const category = queryParams.get("category");
-  const difficulty = queryParams.get("difficulty");
+  const category = location.state?.category || "General Knowledge";
+  const difficulty = location.state?.difficulty || "easy";
 
-  const [username, setUsername] = useState("");
-  const [roomId, setRoomId] = useState("");
-  const [socket, setSocket] = useState(null);
-  const [players, setPlayers] = useState([]);
+  const socket = connectSocket(user?.username);
 
-  // Connect to socket when roomId is set
-  useEffect(() => {
-    if (!socket && roomId && username) {
-      const newSocket = connectSocket(username);
-      setSocket(newSocket);
-
-      newSocket.emit("joinRoom", roomId);
-
-      newSocket.on("playersUpdate", (updatedPlayers) => {
-        setPlayers(updatedPlayers);
-      });
-
-      return () => newSocket.disconnect();
-    }
-  }, [roomId, username, socket]);
-
-  // Generate a random 6-digit room ID for host
+  // Generate a random room ID
   const generateRoomId = () => {
     const id = Math.floor(100000 + Math.random() * 900000);
     setRoomId(id.toString());
   };
 
   const handleJoin = () => {
-    if (!username || !roomId) return alert("Enter username and room ID");
-    // Save player info to navigate to QuizScreen
-    navigate(`/quiz?mode=multi&roomId=${roomId}&category=${category}&difficulty=${difficulty}&username=${username}`);
+    if (!roomId) return alert("Enter or generate a Room ID");
+
+    socket.emit("joinRoom", roomId, { category, difficulty });
+
+    socket.on("playersUpdate", (updatedPlayers) => {
+      setPlayers(updatedPlayers);
+    });
+
+    socket.on("quizStarted", () => {
+      navigate("/quiz-multi", { state: { roomId, socket, players } });
+    });
   };
 
-  return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 20 }}>
-      <h2>Multiplayer Setup</h2>
-      <input
-        type="text"
-        placeholder="Enter username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        style={{ padding: 10, marginBottom: 10, fontSize: 16 }}
-      />
-      <input
-        type="text"
-        placeholder="Enter room ID"
-        value={roomId}
-        onChange={(e) => setRoomId(e.target.value)}
-        style={{ padding: 10, marginBottom: 10, fontSize: 16 }}
-      />
-      <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
-        <button onClick={generateRoomId} style={{ padding: "10px 20px", cursor: "pointer" }}>
-          Generate Room ID
-        </button>
-        <button onClick={handleJoin} style={{ padding: "10px 20px", cursor: "pointer" }}>
-          Join Room
-        </button>
-      </div>
+  useEffect(() => {
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
-      {/* Display current players in the room */}
-      {players.length > 0 && (
-        <div>
-          <h3>Players in Room:</h3>
-          <ul>
-            {players.map((p, idx) => (
-              <li key={idx}>
-                {p.username} - Score: {p.score}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+  return (
+    <div style={{ padding: 20, textAlign: "center" }}>
+      <h2>Multiplayer Setup</h2>
+      <div style={{ marginBottom: 10 }}>
+        <input
+          type="text"
+          placeholder="Enter Room ID"
+          value={roomId}
+          onChange={(e) => setRoomId(e.target.value)}
+        />
+      </div>
+      <button onClick={generateRoomId} style={{ marginRight: 10 }}>
+        Generate Room ID
+      </button>
+      <button onClick={handleJoin}>Join Room</button>
+
+      <div style={{ marginTop: 20 }}>
+        <h3>Players in Room:</h3>
+        <ul>
+          {players.map((p, idx) => (
+            <li key={idx}>{p.username} - Score: {p.score}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
