@@ -7,22 +7,17 @@ const SplashScreen = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Navigate to HomeScreen after 5 seconds
     const timer = setTimeout(() => {
       navigate("/home");
-    }, 5000);
-
+    }, 5000); // 5-second animation
     return () => clearTimeout(timer);
   }, [navigate]);
 
   return (
     <div className={styles.splashContainer}>
-      {/* Placeholder animation */}
-      <div className={styles.logo}>
-        {/* Example animation: spinning circle */}
-        <div className={styles.spinner}></div>
-        <h1>BookMate Quiz App</h1>
-      </div>
+      <h1>BookMate Quiz App</h1>
+      <p>Loading animation...</p>
+      {/* You can replace with actual animation */}
     </div>
   );
 };

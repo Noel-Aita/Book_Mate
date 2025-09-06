@@ -1,84 +1,40 @@
-/* src/components/LoginScreen.module.css */
-
-/* Container centers the login form vertically and horizontally */
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-image: url("/images/home-bg.jpg"); /* light gray-blue */
-  background-size: cover;
-  padding: 20px;
-  
-}
-
-.form{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-/* Input fields styling */
-.input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 16px;
-  border: 1px solid #929aa1;
-  border-radius: 15px;
-  border-width: 5px;
-  font-size: 1rem;
-  box-sizing: border-box;
-}
-
-/*buttons*/
-.button{
-    text-align:center;
-  padding: 10px;
-  color:red;
-  margin-top:5px;
-  background-color: white;
-  margin-top: 16px;
-
-}
-.button:hover {
-  background-color: #2b6cb0;
-  transform: scale(1.02);
-}
-
-.backButton{
-  text-align:center;
-  padding: 10px;
-  color:red;
-  margin-top:5px;
-  background-color: white;
-  margin-top: 16px;
-}
-
-.backButton:hover {
-  background-color: #2b6cb0;
-  transform: scale(1.02);
-}
-
-.login_title{
-  font-size: 4rem;
-  color:white;
+/* src/styles/LoginScreen.module.css */
+.loginContainer {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
   text-align: center;
 }
 
+.loginForm input {
+  display: block;
+  width: 90%;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
 
-/* Mobile responsiveness */
-@media (max-width: 480px) {
-  .formWrapper {
-    padding: 20px;
-  }
-  .title {
-    font-size: 1.7rem;
-  }
-  .input {
-    font-size: 0.95rem;
-  }
-  .loginButton {
-    font-size: 1rem;
-  }
+.loginForm button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2196f3;
+  color: #fff;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  margin-top: 5px;
+}
+
+.toggleLink {
+  color: #2196f3;
+  cursor: pointer;
+  text-decoration: underline;
 }

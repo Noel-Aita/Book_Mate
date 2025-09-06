@@ -1,31 +1,17 @@
-// src/components/QuizScreen.jsx
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import SinglePlayerQuiz from "./SinglePlayerQuiz";
-import PlayerSetupMultiplayer from "./PlayerSetupMultiplayer";
+import MultiplayerQuiz from "./MultiplayerQuiz";
 
-const QuizScreen = ({ user }) => {
+const QuizScreen = () => {
   const location = useLocation();
-  const navigate = useNavigate();
+  const { mode, username, roomId } = location.state || {};
 
-  const mode = location.state?.mode;
-
-  if (!user) {
-    return <p>Please login to play the quiz.</p>;
+  if (mode === "multi") {
+    return <MultiplayerQuiz username={username} roomId={roomId} />;
   }
 
-  if (!mode) {
-    // If mode not set, go back to mode selection
-    navigate("/select");
-    return null;
-  }
-
-  return (
-    <div>
-      {mode === "single" && <SinglePlayerQuiz />}
-      {mode === "multi" && <PlayerSetupMultiplayer onSetup={() => {}} />}
-    </div>
-  );
+  return <SinglePlayerQuiz username={username} />;
 };
 
 export default QuizScreen;

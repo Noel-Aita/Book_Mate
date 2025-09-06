@@ -1,5 +1,6 @@
 // src/components/BlogSection.jsx
 import React, { useEffect, useState } from "react";
+import styles from "../styles/BlogSection.module.css";
 
 const BlogSection = () => {
   const [blogs, setBlogs] = useState([]);
@@ -8,17 +9,25 @@ const BlogSection = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        // Example public API for educational articles
-        const res = await fetch("https://api.spaceflightnewsapi.net/v3/articles?_limit=5");
+        // Example: using free NewsAPI or placeholder API for educational content
+        const res = await fetch("https://api.spaceflightnewsapi.net/v4/articles/?limit=5");
         if (!res.ok) throw new Error("Failed to fetch blogs");
         const data = await res.json();
-        setBlogs(data);
+
+        // Map relevant fields
+        const formatted = data.results.map((item) => ({
+          title: item.title,
+          url: item.url,
+          image: item.imageUrl || "",
+        }));
+
+        setBlogs(formatted);
       } catch (err) {
         console.error("Blog fetch failed:", err);
-        // Fallback static blogs
+        // Fallback blogs
         setBlogs([
-          { id: 1, title: "Fallback Blog 1", url: "#" },
-          { id: 2, title: "Fallback Blog 2", url: "#" },
+          { title: "Sample Blog 1", url: "#", image: "" },
+          { title: "Sample Blog 2", url: "#", image: "" },
         ]);
       } finally {
         setLoading(false);
@@ -31,29 +40,13 @@ const BlogSection = () => {
   if (loading) return <p>Loading blogs...</p>;
 
   return (
-    <div
-      style={{
-        width: "250px",
-        padding: "10px",
-        borderRight: "1px solid #ccc",
-        height: "100vh",
-        position: "fixed",
-        left: 0,
-        top: 0,
-        overflowY: "auto",
-        backgroundColor: "#f5f5f5",
-      }}
-    >
+    <div className={styles.blogContainer}>
       <h3>Educational Blogs</h3>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {blogs.map((blog) => (
-          <li key={blog.id} style={{ margin: "10px 0" }}>
-            <a
-              href={blog.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: "none", color: "#2196F3" }}
-            >
+      <ul>
+        {blogs.map((blog, idx) => (
+          <li key={idx} className={styles.blogItem}>
+            {blog.image && <img src={blog.image} alt={blog.title} className={styles.blogImage} />}
+            <a href={blog.url} target="_blank" rel="noopener noreferrer">
               {blog.title}
             </a>
           </li>

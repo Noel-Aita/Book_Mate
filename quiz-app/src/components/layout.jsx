@@ -1,43 +1,23 @@
 // src/components/Layout.jsx
 import React from "react";
-import styles from "../styles/HomeScreen.module.css"; // reuse your existing styles
+import BlogSection from "./BlogSection";
+import { useLocation } from "react-router-dom";
+import styles from "../styles/Layout.module.css";
 
 const Layout = ({ children }) => {
-  return (
-    <div className={styles.container}>
-      {/* Left pane: the actual page (content changes per route) */}
-      <div className={styles.leftPane}>{children}</div>
+  const location = useLocation();
 
-      {/* Right pane: shared Daily Blogs */}
-      <div className={styles.rightPane}>
-        <h3 className={styles.blogTitle}>Daily Blogs</h3>
-        <div className={styles.blogList}>
-          <div className={styles.blogCard}>
-            <img
-              src="/images/science.jpg"
-              alt="Science"
-              className={styles.blogImage}
-            />
-            <p>Explore fascinating science facts and experiments daily.</p>
-          </div>
-          <div className={styles.blogCard}>
-            <img
-              src="/images/art.jpg"
-              alt="Arts"
-              className={styles.blogImage}
-            />
-            <p>Discover music, arts, and photography insights.</p>
-          </div>
-          <div className={styles.blogCard}>
-            <img
-              src="/images/tech-3.jpg"
-              alt="Tech"
-              className={styles.blogImage}
-            />
-            <p>Learn about the latest technology and innovations.</p>
-          </div>
+  // Hide blog section on Result page
+  const hideBlog = location.pathname === "/results";
+
+  return (
+    <div className={styles.layoutContainer}>
+      <div className={styles.mainContent}>{children}</div>
+      {!hideBlog && (
+        <div className={styles.blogSidebar}>
+          <BlogSection />
         </div>
-      </div>
+      )}
     </div>
   );
 };
