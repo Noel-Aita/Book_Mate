@@ -1,42 +1,15 @@
-// src/components/LoginScreen.jsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "../styles/LoginScreen.module.css";
+import React from "react";
+import BlogSection from "./BlogSection";
+import AuthScreen from "./AuthScreen";
 
-/**
- * Displays login/signup form.
- * On successful login, navigates to Player Setup.
- */
-const LoginScreen = ({ onLogin }) => {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (!username) return alert("Please enter a username");
-    const playerData = { name: username };
-    onLogin(playerData); // update player in App.jsx
-    navigate("/player-setup"); // go to player setup
-  };
-
+const LoginScreen = ({ onAuth }) => {
   return (
-    <div className={styles.container}>
-      <h2 className = {styles.login_title}>Login / Signup</h2>
-      <form onSubmit={handleLogin} className={styles.form}>
-        <input
-          type="text"
-          placeholder="Enter your name"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className={styles.input}
-        />
-        <button type="submit" className={styles.button}>
-          Continue
-        </button>
-      </form>
-      <button onClick={() => navigate("/")} className={styles.backButton}>
-        Back to Home
-      </button>
+    <div style={{ padding: 20 }}>
+      <h2>Login / Signup</h2>
+      <AuthScreen onAuth={onAuth} />
+
+      {/* Blog Section */}
+      <BlogSection />
     </div>
   );
 };

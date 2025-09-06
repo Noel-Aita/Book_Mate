@@ -1,39 +1,66 @@
 // src/components/BlogSection.jsx
-import React from "react";
-import styles from "./BlogSection.module.css";
-
-const blogs = [
-  {
-    img: "/assets/blog1.jpg",
-    title: "New Exoplanet Discovered in the Habitable Zone",
-    description:
-      "Astronomers have discovered a potentially habitable exoplanet using the latest space telescope data. Learn about its unique features and what it means for future exploration.",
-  },
-  {
-    img: "/assets/blog2.jpg",
-    title: "Digital Art Exhibition Goes Global",
-    description:
-      "A virtual art exhibition is connecting artists from around the world. Explore trending digital artworks and gain inspiration from modern art movements.",
-  },
-  {
-    img: "/assets/blog3.jpg",
-    title: "Breakthrough in Renewable Energy Storage",
-    description:
-      "Researchers have developed a new battery technology capable of storing renewable energy more efficiently, bringing us closer to sustainable power solutions.",
-  },
-];
+import React, { useEffect, useState } from "react";
+import styles from "../styles/BlogSection.module.css";
 
 const BlogSection = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        // Example using GNews API (replace with your API key)
+        const res = await fetch(
+          `https://gnews.io/api/v4/search?q=education&lang=en&max=5&apikey=YOUR_API_KEY`
+        );
+        if (!res.ok) throw new Error("Failed to fetch blogs");
+        const data = await res.json();
+        setBlogs(data.articles || []);
+      } catch (err) {
+        console.error("Failed to fetch blogs:", err);
+        // fallback dummy blogs
+        setBlogs([
+          {
+            title: "Learn React in 2025",
+            description: "A comprehensive guide to React development for beginners.",
+            url: "#",
+            image: "",
+          },
+          {
+            title: "Top 10 JavaScript Tips",
+            description: "Enhance your JS skills with these pro tips.",
+            url: "#",
+            image: "",
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  if (loading) return <p>Loading educational blogs...</p>;
+
   return (
     <div className={styles.blogContainer}>
-      <h3 className={styles.blogTitle}>Daily Blogs</h3>
+      <h3>Educational Blogs</h3>
       <div className={styles.blogList}>
         {blogs.map((blog, idx) => (
-          <div key={idx} className={styles.blogCard}>
-            <img src={blog.img} alt={blog.title} className={styles.blogImage} />
-            <h4>{blog.title}</h4>
-            <p>{blog.description}</p>
-          </div>
+          <a
+            key={idx}
+            href={blog.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.blogItem}
+          >
+            {blog.image && <img src={blog.image} alt={blog.title} className={styles.blogImage} />}
+            <div>
+              <h4>{blog.title}</h4>
+              <p>{blog.description}</p>
+            </div>
+          </a>
         ))}
       </div>
     </div>

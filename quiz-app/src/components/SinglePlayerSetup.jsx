@@ -1,29 +1,63 @@
-// src/components/SinglePlayerSetup.jsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import localQuestions from "../data/localQuestions.js";
 
-const SinglePlayerSetup = ({ onSetup }) => {
-  const [username, setUsername] = useState("");
-  const navigate = useNavigate();
+const SinglePlayerQuiz = () => {
+  const [questions, setQuestions] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState("");
 
-  const handleStart = () => {
-    if (!username) return alert("Enter a username");
-    onSetup({ username }); // Save player info
-    navigate("/quiz");     // Navigate to quiz (single-player)
-  };
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/questions");
+        if (!res.ok) throw new Error("Server error: " + res.status);
+        const data = await res.json();
+        setQuestions(data);
+      } catch (err) {
+        console.error("API fetch failed, using fallback questions:", err);
+        setQuestions(localQuestions);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
+  if (questions.length === 0) return <p>Loading questions...</p>;
+
+  const currentQuestion = questions[currentIndex];
+  const options = [...currentQuestion.incorrect_answers, currentQuestion.correct_answer].sort(
+    () => Math.random() - 0.5
+  );
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Single Player</h2>
-      <input
-        type="text"
-        placeholder="Enter username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <button onClick={handleStart}>Start Quiz</button>
+    <div>
+      <h2>{currentQuestion.question}</h2>
+      <ul>
+        {options.map((opt, idx) => (
+          <li key={idx}>
+            <button
+              onClick={() => setSelectedOption(opt)}
+              disabled={!!selectedOption}
+              style={{
+                backgroundColor: selectedOption === opt ? "#4CAF50" : "#eee",
+              }}
+            >
+              {opt}
+            </button>
+          </li>
+        ))}
+      </ul>
+      <button
+        onClick={() => {
+          setCurrentIndex((prev) => prev + 1);
+          setSelectedOption("");
+        }}
+        disabled={!selectedOption}
+      >
+        Next
+      </button>
     </div>
   );
 };
 
-export default SinglePlayerSetup;
+export default SinglePlayerQuiz;

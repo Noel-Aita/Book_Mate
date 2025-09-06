@@ -1,82 +1,67 @@
 // src/App.jsx
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Screens
+import SplashScreen from "./components/SplashScreen";
 import HomeScreen from "./components/HomeScreen";
-import PlayerSetup from "./components/PlayerSetup";
-import CategorySelection from "./components/CategorySelection";
+import LoginScreen from "./components/LoginScreen";
 import QuizScreen from "./components/QuizScreen";
 import ResultScreen from "./components/ResultScreen";
+import PlayerSetupMultiplayer from "./components/PlayerSetupMultiplayer";
+import CategoryDifficultySelect from "./components/CategoryDifficultySelect";
 
 const App = () => {
-  // ------------------------
-  // Player & quiz state
-  // ------------------------
-  const [player, setPlayer] = useState(null);      // { username, roomId? }
-  const [category, setCategory] = useState("");
-  const [difficulty, setDifficulty] = useState("");
-  const [score, setScore] = useState(0);
-  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [user, setUser] = useState(null); // store authenticated user info
+  const [quizSetup, setQuizSetup] = useState({ mode: null, category: null, difficulty: null });
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomeScreen />} />
+        {/* Splash → Home */}
+        <Route path="/" element={<SplashScreen />} />
 
-        {/* Player setup route */}
-        <Route
-          path="/setup"
-          element={<PlayerSetup onSetup={setPlayer} />}
-        />
+        {/* Home screen */}
+        <Route path="/home" element={<HomeScreen />} />
 
-        {/* Category selection for single-player */}
+        {/* Login / Signup */}
+        <Route path="/login" element={<LoginScreen onAuth={setUser} />} />
+
+        {/* Category and Difficulty selection for both modes */}
         <Route
-          path="/category"
+          path="/select"
           element={
-            player?.roomId ? (
-              <Navigate to="/quiz" replace /> // Multiplayer skips category
-            ) : (
-              <CategorySelection
-                onStartQuiz={(cat, diff) => {
-                  setCategory(cat);
-                  setDifficulty(diff);
-                }}
-              />
-            )
+            <CategoryDifficultySelect
+              setup={quizSetup}
+              setSetup={setQuizSetup}
+            />
           }
         />
 
-        {/* Quiz screen */}
+        {/* Multiplayer Player Setup */}
+        <Route
+          path="/multiplayer-setup"
+          element={
+            <PlayerSetupMultiplayer
+              onSetup={(data) => setQuizSetup({ ...quizSetup, ...data, mode: "multi" })}
+            />
+          }
+        />
+
+        {/* Quiz Screen (Single or Multiplayer) */}
         <Route
           path="/quiz"
           element={
-            player ? (
-              <QuizScreen
-                category={category}
-                difficulty={difficulty}
-                roomId={player.roomId}   // undefined in single-player
-                username={player.username}
-                onFinish={(finalScore, total) => {
-                  setScore(finalScore);
-                  setTotalQuestions(total);
-                }}
-              />
-            ) : (
-              <Navigate to="/setup" replace />
-            )
+            <QuizScreen
+              mode={quizSetup.mode}
+              setup={quizSetup}
+              category={quizSetup.category}
+              difficulty={quizSetup.difficulty}
+            />
           }
         />
 
-        {/* Result screen */}
-        <Route
-          path="/result"
-          element={
-            <ResultScreen score={score} totalQuestions={totalQuestions} />
-          }
-        />
-
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Result Screen */}
+        <Route path="/result" element={<ResultScreen />} />
       </Routes>
     </Router>
   );

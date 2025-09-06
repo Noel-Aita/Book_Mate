@@ -1,71 +1,105 @@
+// src/components/AuthScreen.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { signup, login } from "../services/api"; // API calls from backend
-import styles from "../styles/AuthScreen.module.css";
+import { useNavigate, useLocation } from "react-router-dom";
+import { login, signup } from "../services/api"; // API calls
+import BlogSection from "./BlogSection";
 
 const AuthScreen = () => {
-  const [isLogin, setIsLogin] = useState(true); // toggle between login/signup
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const mode = queryParams.get("mode"); // "login" or "signup"
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
-  // Handles login or signup
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
       let response;
-      if (isLogin) {
-        response = await login(username, password);
+      if (mode === "login") {
+        response = await login({ username, password });
       } else {
-        response = await signup(username, password);
+        response = await signup({ username, password });
       }
 
-      // Save token & username in localStorage for later use
+      // Save token locally if needed (optional)
       localStorage.setItem("token", response.token);
       localStorage.setItem("username", response.username);
 
-      // Navigate to player setup after authentication
-      navigate("/player-setup");
+      // Navigate to ModeSelect
+      navigate("/mode");
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setError(err.message || "Authentication failed");
     }
   };
 
   return (
-    <div className={styles.container}>
-      <h2>{isLogin ? "Login" : "Sign Up"}</h2>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      {/* Main content */}
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "20px",
+        }}
+      >
+        <h1>{mode === "login" ? "Login" : "Signup"}</h1>
 
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <input
-          type="text"
-          placeholder="Enter username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Enter password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">
-          {isLogin ? "Login" : "Sign Up"}
-        </button>
-      </form>
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            width: "300px",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            style={{ padding: "10px", fontSize: "16px" }}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ padding: "10px", fontSize: "16px" }}
+          />
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <button
+            type="submit"
+            style={{
+              padding: "10px",
+              fontSize: "16px",
+              cursor: "pointer",
+              backgroundColor: "#4CAF50",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              transition: "background-color 0.3s",
+            }}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = "#45a049")}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = "#4CAF50")}
+          >
+            {mode === "login" ? "Login" : "Signup"}
+          </button>
+        </form>
+      </div>
 
-      {error && <p className={styles.error}>{error}</p>}
-
-      <p className={styles.toggle}>
-        {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-        <button type="button" onClick={() => setIsLogin(!isLogin)}>
-          {isLogin ? "Sign Up" : "Login"}
-        </button>
-      </p>
+      {/* Blog Section */}
+      <BlogSection />
     </div>
   );
 };
