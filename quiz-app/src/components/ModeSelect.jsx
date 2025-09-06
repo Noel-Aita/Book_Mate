@@ -1,63 +1,51 @@
 // src/components/ModeSelect.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import BlogSection from "./BlogSection";
 
-const ModeSelect = () => {
+const ModeSelect = ({ user }) => {
   const navigate = useNavigate();
 
-  const handleSelectMode = (mode) => {
-    navigate(`/category?mode=${mode}`);
-  };
+  if (!user) {
+    // Prevent navigation if not logged in
+    navigate("/login");
+    return null;
+  }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "20px",
-        }}
-      >
-        <h2>Select Game Mode</h2>
-        <div style={{ display: "flex", gap: "20px", marginTop: "20px" }}>
-          <button
-            onClick={() => handleSelectMode("single")}
-            style={{
-              padding: "15px 30px",
-              fontSize: 16,
-              borderRadius: 5,
-              border: "none",
-              backgroundColor: "#4CAF50",
-              color: "#fff",
-              cursor: "pointer",
-            }}
-          >
-            Single Player
-          </button>
+    <div style={{ padding: 20 }}>
+      <h2>Welcome, {user.username}!</h2>
+      <p>Select Quiz Mode:</p>
 
-          <button
-            onClick={() => handleSelectMode("multi")}
-            style={{
-              padding: "15px 30px",
-              fontSize: 16,
-              borderRadius: 5,
-              border: "none",
-              backgroundColor: "#2196F3",
-              color: "#fff",
-              cursor: "pointer",
-            }}
-          >
-            Multiplayer
-          </button>
-        </div>
+      <div style={{ marginTop: 20 }}>
+        <button
+          onClick={() => navigate("/select-category", { state: { mode: "single" } })}
+          style={{
+            padding: "10px 20px",
+            marginRight: 10,
+            borderRadius: 5,
+            border: "none",
+            backgroundColor: "#4CAF50",
+            color: "#fff",
+            cursor: "pointer",
+          }}
+        >
+          Single Player
+        </button>
+
+        <button
+          onClick={() => navigate("/player-setup-multiplayer")}
+          style={{
+            padding: "10px 20px",
+            borderRadius: 5,
+            border: "none",
+            backgroundColor: "#2196F3",
+            color: "#fff",
+            cursor: "pointer",
+          }}
+        >
+          Multiplayer
+        </button>
       </div>
-
-      {/* BlogSection visible on all screens except ResultScreen */}
-      <BlogSection />
     </div>
   );
 };
