@@ -1,37 +1,22 @@
-// src/services/socket.js
 import { io } from "socket.io-client";
 
-let socket = null;
+let socket;
 
-/**
- * Connects a socket with the given username
- * @param {string} username
- * @returns {Socket} socket.io client instance
- */
-export const connectSocket = (username) => {
+export const connectSocket = () => {
   if (!socket) {
-    // Connect to backend server
-    socket = io("http://localhost:5000", {
-      query: { username },
-      autoConnect: true,
-      reconnection: true,   // automatically reconnect if connection drops
+    // Connect to the backend socket server
+    socket = io("http://localhost:5001", {
+      transports: ["websocket", "polling"],
     });
 
     socket.on("connect", () => {
-      console.log("Connected to server with ID:", socket.id);
+      console.log("Connected to socket server:", socket.id);
     });
 
     socket.on("disconnect", () => {
-      console.log("Disconnected from server");
+      console.log("Disconnected from socket server");
+      socket = null;
     });
   }
-  return socket;
-};
-
-/**
- * Returns the existing socket instance
- */
-export const getSocket = () => {
-  if (!socket) throw new Error("Socket not connected. Call connectSocket(username) first.");
   return socket;
 };

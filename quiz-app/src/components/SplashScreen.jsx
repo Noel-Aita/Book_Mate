@@ -1,4 +1,3 @@
-// src/components/SplashScreen.jsx
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/SplashScreen.module.css";
@@ -9,15 +8,15 @@ const SplashScreen = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/home");
-    }, 5000); // 5-second animation
+    }, 5000); // 5-second splash
+
     return () => clearTimeout(timer);
   }, [navigate]);
 
   return (
     <div className={styles.splashContainer}>
       <h1>BookMate Quiz App</h1>
-      <p>Loading animation...</p>
-      {/* You can replace with actual animation */}
+      <p>Loading animation placeholder...</p>
     </div>
   );
 };

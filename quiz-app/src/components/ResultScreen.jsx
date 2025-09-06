@@ -1,20 +1,20 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Layout from "./Layout";
 
 const ResultScreen = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const { score = 0, total = 0, username = "Player" } = location.state || {};
+  const { score, username } = location.state || {};
 
   return (
-    <div style={{ textAlign: "center", padding: "20px" }}>
-      <h2>Quiz Results</h2>
-      <p>
-        <strong>{username}</strong>, you scored {score} out of {total}
-      </p>
-      <button onClick={() => navigate("/select")}>Play Again</button>
-    </div>
+    <Layout>
+      <div>
+        <h2>Quiz Results</h2>
+        <p>{username}, your score is: {score}</p>
+        <button onClick={() => navigate("/home")}>Go Home</button>
+      </div>
+    </Layout>
   );
 };
 

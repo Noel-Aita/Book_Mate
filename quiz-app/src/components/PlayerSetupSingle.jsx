@@ -4,21 +4,19 @@ import { useNavigate, useLocation } from "react-router-dom";
 const PlayerSetupSingle = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { mode } = location.state || {};
+  const { category, difficulty } = location.state || {};
 
   const [username, setUsername] = useState("");
 
   const handleStart = () => {
-    if (username.trim()) {
-      navigate("/quiz", { state: { mode, username } });
-    }
+    if (!username) return alert("Enter your name");
+    navigate("/quiz", { state: { username, category, difficulty, mode: "single" } });
   };
 
   return (
     <div>
       <h2>Single Player Setup</h2>
       <input
-        type="text"
         placeholder="Enter your name"
         value={username}
         onChange={(e) => setUsername(e.target.value)}

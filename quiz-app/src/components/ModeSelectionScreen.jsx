@@ -6,21 +6,11 @@ const ModeSelectionScreen = () => {
   const navigate = useNavigate();
 
   return (
-    <div className={styles.container}>
+    <div className={styles.modeContainer}>
       <h2>Select Game Mode</h2>
       <div className={styles.buttonGroup}>
-        <button
-          onClick={() => navigate("/setup-single", { state: { mode: "single" } })}
-          className={styles.modeButton}
-        >
-          Single Player
-        </button>
-        <button
-          onClick={() => navigate("/setup-multi", { state: { mode: "multi" } })}
-          className={styles.modeButton}
-        >
-          Multiplayer
-        </button>
+        <button onClick={() => navigate("/single-setup")}>Single Player</button>
+        <button onClick={() => navigate("/multi-setup")}>Multiplayer</button>
       </div>
     </div>
   );

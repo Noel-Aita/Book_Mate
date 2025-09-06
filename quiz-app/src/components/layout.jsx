@@ -1,4 +1,3 @@
-// src/components/Layout.jsx
 import React from "react";
 import BlogSection from "./BlogSection";
 import { useLocation } from "react-router-dom";
@@ -6,8 +5,6 @@ import styles from "../styles/Layout.module.css";
 
 const Layout = ({ children }) => {
   const location = useLocation();
-
-  // Hide blog section on Result page
   const hideBlog = location.pathname === "/results";
 
   return (

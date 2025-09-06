@@ -13,12 +13,22 @@ const LoginScreen = () => {
     e.preventDefault();
     setError("");
 
-    // Mock login/signup
-    if (username.trim() && password.trim()) {
-      localStorage.setItem("user", username);
+    const endpoint = isLogin ? "/login" : "/signup";
+
+    try {
+      const res = await fetch(`http://localhost:5000${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Authentication failed");
+
       navigate("/select");
-    } else {
-      setError("Please enter username and password");
+    } catch (err) {
+      setError(err.message);
     }
   };
 
