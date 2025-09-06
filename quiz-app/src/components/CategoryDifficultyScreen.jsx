@@ -24,12 +24,13 @@ const CategoryDifficultyScreen = () => {
     <Layout>
       <div className={styles.container}>
         <h2>Select Category & Difficulty</h2>
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <select className={styles.option1} value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="general">General Knowledge</option>
           <option value="science">Science</option>
           <option value="history">History</option>
         </select>
         <select
+          className={styles.option2}
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
         >
@@ -37,7 +38,7 @@ const CategoryDifficultyScreen = () => {
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
         </select>
-        <button onClick={handleStart}>Start Quiz</button>
+        <button className={styles.startQuizButton} onClick={handleStart}>Start Quiz</button>
       </div>
     </Layout>
   );

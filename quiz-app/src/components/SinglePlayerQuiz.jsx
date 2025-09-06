@@ -1,29 +1,11 @@
-// src/components/SinglePlayerQuiz.jsx
 import React, { useEffect, useState } from "react";
 import Layout from "./Layout";
 import localQuestions from "../data/localQuestions.js";
 
 const SinglePlayerQuiz = () => {
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState(localQuestions);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState("");
-
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/questions");
-        if (!res.ok) throw new Error("Server error: " + res.status);
-        const data = await res.json();
-        setQuestions(data);
-      } catch (err) {
-        console.error("API fetch failed, using fallback:", err);
-        setQuestions(localQuestions);
-      }
-    };
-    fetchQuestions();
-  }, []);
-
-  if (!questions.length) return <Layout><p>Loading questions...</p></Layout>;
 
   const currentQuestion = questions[currentIndex];
   const options = [...currentQuestion.incorrect_answers, currentQuestion.correct_answer].sort(

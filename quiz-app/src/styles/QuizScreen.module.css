@@ -1,141 +1,75 @@
-/* src/components/QuizScreen.module.css */
-
-/* Container for the entire quiz screen, uses flex for left-right layout */
-.container {
-  display: flex;
-  flex-direction: row;
-  padding: 20px;
-  gap: 0px;
-  background-image:url('/images/pencils.jpg');
-  background-size: cover;
-  max-width: 4000px;
-  max-height: 100%;
-}
-
-/* Left side: main quiz area */
-.container > div:first-child {
-  flex: 2;
-}
-
-/* Question title */
-h2 {
-  margin-bottom: 10px;
-  font-size: 1.5rem;
-}
-
-/* Question text */
-p {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-}
-
-/* Answer buttons */
-.answerButton {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin: 6px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #2c8d41;
-  cursor: pointer;
-  text-align: left;
-  transition: background-color 0.2s ease;
-}
-
-.answerButton:hover {
-  background-color: #2d4c6b;
-}
-
-.backButton{
-  background-color: blue;
-}
-
-/* Selected answer highlight */
-.selected {
-  background-color: #e77deb; /* light green */
-  border-color: #0f5132;
-}
-
-/* Navigation buttons container */
-.navigation {
-  margin-top: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-/* Submit button styling */
-.submitButton {
-  background-color: #0d6efd;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: blue;
-}
-
-.submitButton:hover {
-  background-color: #084298;
-}
-
-/* Right side: blog section */
-.blogPane {
+.quizContainer {
   display: flex;
   flex-direction: column;
-  max-width: 300px;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #894141, #e3f2fd);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.blogTitle {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+.quizTitle {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.blogList {
+.questionText {
+  font-size: 20px;
+  color: #555;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.optionsList {
   display: flex;
   flex-direction: column;
   gap: 15px;
-}
-
-.blogCard {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #3eb491;
-}
-
-.blogImage {
   width: 100%;
-  height: auto;
-  display: block;
+  max-width: 600px;
+  margin-bottom: 30px;
 }
 
-.blogCard p {
-  padding: 10px;
-  font-size: 0.9rem;
+.optionsList button {
+  padding: 15px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #eee;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-  }
+.optionsList button:hover {
+  background-color: #d0e1ff;
+}
 
-  .blogPane {
-    max-width: 100%;
-    margin-top: 20px;
-  }
+.optionsList button.selected {
+  background-color: #4CAF50;
+  color: #fff;
+  font-weight: bold;
+  border-color: #4CAF50;
+}
 
-  .answerButton {
-    font-size: 1rem;
-  }
+.nextButton {
+  padding: 15px 30px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  background-color: #2575fc;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-  h2 {
-    font-size: 1.3rem;
-  }
+.nextButton:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
 
-  p {
-    font-size: 1rem;
-  }
+.nextButton:hover:enabled {
+  background-color: #1a5dcc;
 }

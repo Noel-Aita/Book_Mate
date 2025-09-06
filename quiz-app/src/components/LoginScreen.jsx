@@ -17,11 +17,12 @@ const LoginScreen = () => {
     const endpoint = isLogin ? "/login" : "/signup";
 
     try {
-      const res = await fetch(`http://localhost:5000${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+      const res = await fetch("http://localhost:5001/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Authentication failed");

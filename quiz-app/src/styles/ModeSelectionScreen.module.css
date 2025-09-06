@@ -1,0 +1,55 @@
+
+.modeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  background-color: rgb(22, 146, 146);
+  border-radius: 20px;
+}
+
+.modeTitle {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.modeButtons {
+  display: flex;
+  gap: 20px;
+  
+}
+
+.SingleButton {
+  padding: 15px 30px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: #1e90ff;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.SingleButton:hover {
+  background-color: #0f7ae5;
+  transform: scale(1.05);
+}
+
+
+.MultiButton {
+  padding: 15px 30px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: #1e90ff;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.MultiButton:hover {
+  background-color: #0f7ae5;
+  transform: scale(1.05);
+}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styles from "../styles/BlogSection.module.css"; // Make sure this path is correct
 
 const BlogSection = () => {
   const [blogs, setBlogs] = useState([]);
@@ -17,12 +18,17 @@ const BlogSection = () => {
   }, []);
 
   return (
-    <div>
-      <h3>Educational Blogs</h3>
-      <ul>
+    <div className={styles.blogContainer}>
+      <h3 className={styles.blogHeading}>Educational Blogs</h3>
+      <ul className={styles.blogList}>
         {blogs.map((blog, idx) => (
-          <li key={idx}>
-            <a href={blog.link || "#"} target="_blank" rel="noreferrer">
+          <li key={idx} className={styles.blogItem}>
+            <a
+              href={blog.link || "#"}
+              target="_blank"
+              rel="noreferrer"
+              className={styles.blogLink}
+            >
               {blog.title}
             </a>
           </li>

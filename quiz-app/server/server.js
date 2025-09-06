@@ -1,89 +1,46 @@
+// server/server.js
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
+import cors from "cors";
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "*", // Allow your frontend origin if needed
-    methods: ["GET", "POST"],
-  },
+  cors: { origin: "*" },
 });
 
-const PORT = 5001;
+app.use(cors());
+app.use(express.json());
 
-// Rooms data structure
-const rooms = {}; // { roomId: { players: [{id, username}], currentPlayer: 0 } }
+// 👉 LOGIN ENDPOINT
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
 
+  // Simple demo logic (replace with DB if needed)
+  if (!username || !password) {
+    return res.status(400).json({ success: false, message: "Missing credentials" });
+  }
+
+  console.log(`User logged in: ${username}`);
+  res.json({ success: true, username });
+});
+
+// 👉 SOCKET SETUP
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  // Join a room
-  socket.on("joinRoom", ({ roomId, username }) => {
-    if (!rooms[roomId]) {
-      rooms[roomId] = { players: [], currentPlayer: 0 };
-    }
-
-    // Add player if not already in room
-    const exists = rooms[roomId].players.find((p) => p.id === socket.id);
-    if (!exists) {
-      rooms[roomId].players.push({ id: socket.id, username });
-    }
-
+  socket.on("join-room", ({ roomId, username }) => {
     socket.join(roomId);
-
-    // Broadcast current players
-    io.to(roomId).emit("updatePlayers", rooms[roomId].players);
-
-    // Broadcast current player
-    io.to(roomId).emit(
-      "currentPlayer",
-      rooms[roomId].players[rooms[roomId].currentPlayer]
-    );
-
-    console.log(
-      `Player ${username} joined room ${roomId}. Players now:`,
-      rooms[roomId].players
-    );
+    console.log(`${username} joined room ${roomId}`);
+    io.to(roomId).emit("player-joined", username);
   });
 
-  // Handle answer submission
-  socket.on("answerSubmitted", ({ roomId }) => {
-    const room = rooms[roomId];
-    if (!room) return;
-
-    // Move to next player
-    room.currentPlayer = (room.currentPlayer + 1) % room.players.length;
-
-    // Broadcast new current player
-    io.to(roomId).emit(
-      "currentPlayer",
-      room.players[room.currentPlayer]
-    );
-  });
-
-  // Handle disconnect
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
-
-    // Remove player from all rooms
-    for (const roomId in rooms) {
-      const room = rooms[roomId];
-      const index = room.players.findIndex((p) => p.id === socket.id);
-      if (index !== -1) {
-        room.players.splice(index, 1);
-        io.to(roomId).emit("updatePlayers", room.players);
-      }
-
-      // Delete room if empty
-      if (room.players.length === 0) {
-        delete rooms[roomId];
-      }
-    }
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Socket server running on http://localhost:${PORT}`);
+server.listen(5001, () => {
+  console.log("Server running on http://localhost:5001");
 });
