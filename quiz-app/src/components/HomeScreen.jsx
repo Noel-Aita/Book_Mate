@@ -1,33 +1,23 @@
-// src/components/HomeScreen.jsx
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import Layout from "./Layout";
-import styles from "../styles/HomeScreen.module.css";
+import { useNavigate } from 'react-router-dom';
+import styles from '../styles/HomeScreen.module.css';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
 
+  const handleProceed = () => {
+    navigate('/login');
+  };
+
   return (
-    <Layout>
-      <div className={styles.homeContainer}>
-        <h1>Welcome to BookMate Quiz App</h1>
-        <p>Select Login or Signup to continue:</p>
-        <div className={styles.buttonGroup}>
-          <button
-            className={styles.homeButton}
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </button>
-          <button
-            className={styles.homeButton}
-            onClick={() => navigate("/signup")}
-          >
-            Signup
-          </button>
-        </div>
+    <div className="home-container">
+      <div className="welcome-card">
+        <h1>Welcome to QuizMaster!</h1>
+        <p>Test your knowledge, challenge friends, and learn something new every day.</p>
+        <button onClick={handleProceed} className="proceed-btn">
+          Let's Get Started
+        </button>
       </div>
-    </Layout>
+    </div>
   );
 };
 

@@ -1,83 +1,70 @@
-// src/components/CategoryDifficultySelect.jsx
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import Layout from "./Layout";
-import BlogSection from "./BlogSection";
-import styles from "../styles/CategoryDifficultyScreen.module.css";
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import styles from '../styles/CategoryDifficultyScreen.module.css';
 
-const CategoryDifficultySelect = () => {
+const CategoryDifficultyScreen = () => {
+  const [category, setCategory] = useState('9');
+  const [difficulty, setDifficulty] = useState('easy');
+  
   const navigate = useNavigate();
   const location = useLocation();
-  const { username } = location.state || {};
+  const mode = location.state?.mode || 'single';
 
-  // Redirect to login if user is not authenticated
-  useEffect(() => {
-    if (!username) {
-      navigate("/login");
+  const categories = [
+    { id: '9', name: 'General Knowledge' },
+    { id: '17', name: 'Science & Nature' },
+    { id: '23', name: 'History' },
+    { id: '11', name: 'Entertainment: Film' },
+    { id: '15', name: 'Entertainment: Video Games' },
+  ];
+
+  const difficulties = [
+    { id: 'easy', name: 'Easy' },
+    { id: 'medium', name: 'Medium' },
+    { id: 'hard', name: 'Hard' },
+  ];
+
+  const handleStart = () => {
+    if (mode === 'single') {
+      navigate('/single-player', { state: { category, difficulty } });
+    } else {
+      navigate('/multiplayer-setup', { state: { category, difficulty } });
     }
-  }, [username, navigate]);
-
-  const [category, setCategory] = useState("");
-  const [difficulty, setDifficulty] = useState("");
-
-  const handleStartQuiz = () => {
-    if (!category || !difficulty) {
-      alert("Please select both category and difficulty");
-      return;
-    }
-    navigate("/single-player-quiz", {
-      state: { username, category, difficulty },
-    });
   };
 
   return (
-    <Layout>
-      <div
-        className={styles.container}
-        style={{
-          backgroundImage: "url(/assets/category-bg.jpg)",
-          backgroundSize: "cover",
-          minHeight: "100vh",
-          padding: "2rem",
-        }}
-      >
-        <h1>Select Category & Difficulty</h1>
-        <div className={styles.selection}>
-          <label>
-            Category:
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="">--Select--</option>
-              <option value="math">Math</option>
-              <option value="science">Science</option>
-              <option value="history">History</option>
-            </select>
-          </label>
-
-          <label>
-            Difficulty:
-            <select
-              value={difficulty}
-              onChange={(e) => setDifficulty(e.target.value)}
-            >
-              <option value="">--Select--</option>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
-          </label>
+    <div className="category-container">
+      <h1>Select Quiz Options</h1>
+      
+      <div className="options-card">
+        <div className="option-group">
+          <label>Category</label>
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
         </div>
-
-        <button className={styles.startButton} onClick={handleStartQuiz}>
+        
+        <div className="option-group">
+          <label>Difficulty</label>
+          <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+            {difficulties.map((diff) => (
+              <option key={diff.id} value={diff.id}>
+                {diff.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <button onClick={handleStart} className="start-btn">
           Start Quiz
         </button>
-
-        <BlogSection />
       </div>
-    </Layout>
+    </div>
   );
 };
 
-export default CategoryDifficultySelect;
+export default CategoryDifficultyScreen;

@@ -1,48 +1,70 @@
-// src/components/LoginScreen.jsx
-import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import Layout from "./Layout";
-import { AuthContext } from "./AuthContext";
-import styles from "../styles/LoginScreen.module.css";
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from './AuthContext';
+import AuthScreen from '../styles/AuthScreen.module.css';
 
 const LoginScreen = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  const { login } = useAuth();
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState(""); // optional for now
 
-  const handleLogin = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!username.trim()) return alert("Please enter username");
-    login(username); // updates context and localStorage
-    navigate("/mode"); // proceed to mode selection
+    
+    try {
+      setError('');
+      setLoading(true);
+      const result = await login(email, password);
+      
+      if (result.success) {
+        navigate('/mode-select');
+      } else {
+        setError(result.error);
+      }
+    } catch {
+      setError('Failed to log in');
+    }
+    
+    setLoading(false);
   };
 
   return (
-    <Layout>
-      <div className={styles.loginContainer} style={{ backgroundImage: "url(/assets/login-bg.jpg)" }}>
-        <div className={styles.loginCard}>
-          <h2>Login</h2>
-          <form onSubmit={handleLogin}>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2>Log In to QuizMaster</h2>
+        {error && <div className="error-alert">{error}</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Email</label>
             <input
-              type="text"
-              placeholder="Enter your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className={styles.loginInput}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
+          </div>
+          <div className="form-group">
+            <label>Password</label>
             <input
               type="password"
-              placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={styles.loginInput}
+              required
             />
-            <button type="submit" className={styles.loginButton}>Enter</button>
-          </form>
+          </div>
+          <button disabled={loading} type="submit" className="auth-btn">
+            Log In
+          </button>
+        </form>
+        <div className="auth-link">
+          Need an account? <Link to="/signup">Sign Up</Link>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 

@@ -1,19 +1,7 @@
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client';
 
-let socket = null;
+const URL = process.env.NODE_ENV === 'production' ? window.location.hostname : 'http://localhost:3001';
 
-export const initSocket = (token) => {
-  socket = io("http://localhost:5000", {
-    auth: { token },
-  });
-
-  socket.on("connect", () => console.log("Socket connected:", socket.id));
-  socket.on("connect_error", (err) => console.error("Socket error:", err.message));
-
-  return socket;
-};
-
-export const getSocket = () => {
-  if (!socket) throw new Error("Socket not initialized. Call initSocket(token) first.");
-  return socket;
-};
+export const socket = io(URL, {
+  autoConnect: false
+});

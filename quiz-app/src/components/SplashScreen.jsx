@@ -1,29 +1,27 @@
-// src/components/SplashScreen.jsx
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "../styles/SplashScreen.module.css";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from '../styles/SplashScreen.module.css';
 
 const SplashScreen = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate("/home"); // Navigate to HomeScreen after 5 seconds
+      navigate('/home');
     }, 5000);
 
     return () => clearTimeout(timer);
   }, [navigate]);
 
   return (
-    <div className={styles.splashContainer}>
-    <img
-      src="/assets/splash.jpg"
-      alt="Splash Screen"
-      className={styles.splashImage}
-    />
-    <h1 className={styles.appTitle}>Book Mate Quiz</h1> {/* Optional title overlay */}
+    <div className="splash-container">
+      <div className="logo">
+        <h1>QuizMaster</h1>
       </div>
-  )
+      <div className="loading-spinner"></div>
+      <p>Loading amazing quiz experience...</p>
+    </div>
+  );
 };
 
 export default SplashScreen;

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Layout from "./Layout";
-import localQuestions from "../data/localQuestions";
 import styles from "../styles/QuizScreen.module.css";
 
 const QuizScreen = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { username, category, difficulty } = location.state || {};
+  const { username } = location.state || {};
 
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -15,16 +14,21 @@ const QuizScreen = () => {
   const [score, setScore] = useState(0);
 
   useEffect(() => {
+    if (!username) return navigate("/login");
+
     const fetchQuestions = async () => {
       try {
-        // Using localQuestions instead of API
-        setQuestions(localQuestions);
-      } catch {
-        setQuestions(localQuestions);
+        const res = await fetch("/localQuestions.json"); // public folder
+        const data = await res.json();
+        const shuffled = data.sort(() => Math.random() - 0.5).slice(0, 10);
+        setQuestions(shuffled);
+      } catch (err) {
+        console.error("Failed to fetch questions:", err);
       }
     };
+
     fetchQuestions();
-  }, []);
+  }, [username, navigate]);
 
   if (!questions.length)
     return (
@@ -39,16 +43,18 @@ const QuizScreen = () => {
   );
 
   const handleAnswer = (selected) => {
-    if (selected === current.correct_answer) setScore(score + 1);
     setSelectedOption(selected);
+    if (selected === current.correct_answer) {
+      setScore((prev) => prev + 1);
+    }
   };
 
   const handleNext = () => {
     if (currentIndex + 1 < questions.length) {
-      setCurrentIndex(currentIndex + 1);
+      setCurrentIndex((prev) => prev + 1);
       setSelectedOption("");
     } else {
-      navigate("/results", { state: { score, username } });
+      navigate("/results", { state: { score, username, total: questions.length } });
     }
   };
 

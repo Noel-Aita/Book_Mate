@@ -1,76 +1,84 @@
-// src/components/ResultsScreen.jsx
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import Layout from "./Layout";
-import BlogSection from "./BlogSection";
-import styles from "../styles/ResultScreen.module.css";
+import { useNavigate, useLocation } from 'react-router-dom';
+import '../styles/ResultScreen.module.css';
 
-const ResultsScreen = () => {
+const ResultScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const { scores, players, username } = location.state || {};
-
-  // Redirect if no results data
-  if (!scores || !players) {
-    navigate("/home");
-    return null;
+  const { score, total, players, mode } = location.state || {};
+  
+  const percentage = Math.round((score / total) * 100);
+  
+  let resultMessage = '';
+  let resultEmoji = '';
+  
+  if (percentage >= 90) {
+    resultMessage = 'Quiz Master!';
+    resultEmoji = '🎉';
+  } else if (percentage >= 70) {
+    resultMessage = 'Great Job!';
+    resultEmoji = '👍';
+  } else if (percentage >= 50) {
+    resultMessage = 'Good Effort!';
+    resultEmoji = '😊';
+  } else {
+    resultMessage = 'Keep Practicing!';
+    resultEmoji = '💪';
   }
 
-  return (
-    <Layout>
-      <div
-        className={styles.resultsContainer}
-        style={{
-          backgroundImage: "url(/assets/results-bg.jpg)",
-          backgroundSize: "cover",
-          minHeight: "100vh",
-          padding: "2rem",
-        }}
-      >
-        <h1>Quiz Results</h1>
+  const handlePlayAgain = () => {
+    if (mode === 'single') {
+      navigate('/category-difficulty', { state: { mode: 'single' } });
+    } else {
+      navigate('/multiplayer-setup');
+    }
+  };
 
-        {players.length > 1 ? (
-          <div className={styles.multiplayerResults}>
-            <h2>Multiplayer Scores</h2>
-            <ul>
-              {players.map((player) => (
-                <li key={player.username}>
-                  {player.username}: {scores[player.username] || 0} points
-                </li>
-              ))}
-            </ul>
+  const handleGoHome = () => {
+    navigate('/home');
+  };
+
+  return (
+    <div className="results-container">
+      <div className="results-card">
+        <h1>Quiz Completed!</h1>
+        
+        <div className="score-display">
+          <div className="score-circle">
+            <span className="score-value">{score}/{total}</span>
+            <span className="score-percentage">{percentage}%</span>
           </div>
-        ) : (
-          <div className={styles.singlePlayerResults}>
-            <h2>{username} scored {scores[username] || 0} points</h2>
+          <div className="result-message">
+            {resultMessage} {resultEmoji}
+          </div>
+        </div>
+        
+        {mode === 'multi' && players && (
+          <div className="leaderboard">
+            <h2>Leaderboard</h2>
+            {players
+              .sort((a, b) => b.score - a.score)
+              .map((player, index) => (
+                <div key={player.playerId} className="leaderboard-item">
+                  <span className="rank">#{index + 1}</span>
+                  <span className="player-name">{player.playerName}</span>
+                  <span className="player-score">{player.score} points</span>
+                </div>
+              ))
+            }
           </div>
         )}
-
-        <div className={styles.resultButtons}>
-          <button
-            className={styles.homeButton}
-            onClick={() => navigate("/home")}
-          >
-            Home
+        
+        <div className="action-buttons">
+          <button onClick={handlePlayAgain} className="play-again-btn">
+            Play Again
           </button>
-          <button
-            className={styles.retryButton}
-            onClick={() =>
-              players.length > 1
-                ? navigate("/mode", { state: { username } })
-                : navigate("/category-difficulty", { state: { username } })
-            }
-          >
-            Retry
+          <button onClick={handleGoHome} className="home-btn">
+            Back to Home
           </button>
         </div>
-
-        {/* Show blog only if not multiplayer? Currently showing for all pages */}
-        <BlogSection />
       </div>
-    </Layout>
+    </div>
   );
 };
 
-export default ResultsScreen;
+export default ResultScreen;

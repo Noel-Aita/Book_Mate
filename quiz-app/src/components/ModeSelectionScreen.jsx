@@ -1,43 +1,32 @@
-// src/components/ModeSelectionScreen.jsx
-import React, { useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "./AuthContext";
-import Layout from "./Layout";
-import styles from "../styles/ModeSelectionScreen.module.css";
+import { useNavigate } from 'react-router-dom';
+import styles from '../styles/ModeSelectionScreen.module.css';
 
 const ModeSelectionScreen = () => {
-  const { user } = useContext(AuthContext); // get logged-in user
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // If user is not logged in, redirect to login
-    if (!user || !user.username) {
-      navigate("/login");
-    }
-  }, [user, navigate]);
-
-  const handleSinglePlayer = () => {
-    navigate("/category-difficulty", { state: { username: user.username, mode: "single" } });
-  };
-
-  const handleMultiPlayer = () => {
-    navigate("/player-setup", { state: { username: user.username, mode: "multi" } });
+  const handleModeSelect = (mode) => {
+    navigate('/category-difficulty', { state: { mode } });
   };
 
   return (
-    <Layout>
-      <div className={styles.modeContainer}>
-        <h2>Select Game Mode</h2>
-        <div className={styles.buttonGroup}>
-          <button className={styles.modeButton} onClick={handleSinglePlayer}>
-            Single Player
-          </button>
-          <button className={styles.modeButton} onClick={handleMultiPlayer}>
-            Multiplayer
-          </button>
+    <div className="mode-container">
+      <h1>Select Game Mode</h1>
+      <div className="mode-cards">
+        <div className="mode-card" onClick={() => handleModeSelect('single')}>
+          <div className="mode-icon single-player"></div>
+          <h2>Single Player</h2>
+          <p>Test your knowledge against our question bank</p>
+          <button className="mode-btn">Play Solo</button>
+        </div>
+        
+        <div className="mode-card" onClick={() => handleModeSelect('multi')}>
+          <div className="mode-icon multi-player"></div>
+          <h2>Multiplayer</h2>
+          <p>Challenge friends in real-time quiz battles</p>
+          <button className="mode-btn">Play with Friends</button>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 

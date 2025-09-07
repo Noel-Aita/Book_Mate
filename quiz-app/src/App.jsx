@@ -1,89 +1,66 @@
-// src/App.jsx
-import React, { useContext } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import SplashScreen from "./components/SplashScreen";
-import HomeScreen from "./components/HomeScreen";
-import LoginScreen from "./components/LoginScreen";
-import SignupScreen from "./components/SignupScreen";
-import ModeSelectionScreen from "./components/ModeSelectionScreen";
-import CategoryDifficultySelect from "./components/CategoryDifficultyScreen";
-import PlayerSetupMultiplayer from "./components/PlayerSetupMultiplayer";
-import SinglePlayerQuiz from "./components/SinglePlayerQuiz";
-import MultiPlayerQuiz from "./components/MultiplayerQuiz";
-import ResultsScreen from "./components/ResultScreen";
-import { AuthContext } from "./components/AuthContext";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './components/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
+import SplashScreen from './components/SplashScreen';
+import HomeScreen from './components/HomeScreen';
+import LoginScreen from './components/LoginScreen';
+import SignupScreen from './components/SignupScreen';
+import ModeSelectionScreen from './components/ModeSelectionScreen';
+import CategoryDifficultyScreen from './components/CategoryDifficultyScreen';
+import PlayerSetupMultiplayer from './components/PlayerSetupMultiplayer';
+import SinglePlayerQuiz from './components/SinglePlayerQuiz';
+import MultiplayerQuiz from './components/MultiplayerQuiz';
+import ResultScreen from './components/ResultScreen';
 
-// PrivateRoute wrapper to enforce authentication
-const PrivateRoute = ({ children }) => {
-  const { user } = useContext(AuthContext);
-  if (!user) return <Navigate to="/login" />;
-  return children;
-};
-
-const App = () => {
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<SplashScreen />} />
-        <Route path="/home" element={<HomeScreen />} />
-        <Route path="/login" element={<LoginScreen />} />
-        <Route path="/signup" element={<SignupScreen />} />
-
-        {/* Protected routes */}
-        <Route
-          path="/mode"
-          element={
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<SplashScreen />} />
+          <Route path="/home" element={<HomeScreen />} />
+          <Route path="/login" element={<LoginScreen />} />
+          <Route path="/signup" element={<SignupScreen />} />
+          
+          <Route path="/mode" element={
             <PrivateRoute>
               <ModeSelectionScreen />
             </PrivateRoute>
-          }
-        />
-        <Route
-          path="/category"
-          element={
+          } />
+          
+          <Route path="/category-difficulty" element={
             <PrivateRoute>
-              <CategoryDifficultySelect />
+              <CategoryDifficultyScreen />
             </PrivateRoute>
-          }
-        />
-        <Route
-          path="/player-setup"
-          element={
+          } />
+          
+          <Route path="/multiplayer-setup" element={
             <PrivateRoute>
               <PlayerSetupMultiplayer />
             </PrivateRoute>
-          }
-        />
-        <Route
-          path="/single-quiz"
-          element={
+          } />
+          
+          <Route path="/single-player" element={
             <PrivateRoute>
               <SinglePlayerQuiz />
             </PrivateRoute>
-          }
-        />
-        <Route
-          path="/multi-quiz"
-          element={
+          } />
+          
+          <Route path="/multi-quiz" element={
             <PrivateRoute>
-              <MultiPlayerQuiz />
+              <MultiplayerQuiz />
             </PrivateRoute>
-          }
-        />
-        <Route
-          path="/results"
-          element={
+          } />
+          
+          <Route path="/results" element={
             <PrivateRoute>
-              <ResultsScreen />
+              <ResultScreen />
             </PrivateRoute>
-          }
-        />
-
-        {/* Redirect unknown routes to home */}
-        <Route path="*" element={<Navigate to="/home" />} />
-      </Routes>
-    </Router>
+          } />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
-};
+}
 
 export default App;
