@@ -1,22 +1,33 @@
 // src/components/PlayerSetup.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "./PlayerSetup.module.css";
 
-const PlayerSetup = ({ onSetup }) => {
+/**
+ * Allows player to choose single or multi-player mode.
+ * Navigates to CategorySelection.
+ */
+const PlayerSetup = () => {
   const navigate = useNavigate();
 
-  const handleStart = () => {
-    const username = prompt("Enter your name:");
-    if (!username) return alert("Please enter a name");
-
-    onSetup({ username }); // no roomId for single-player
-    navigate("/category");
-  };
-
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Single Player Setup</h2>
-      <button onClick={handleStart}>Start Quiz</button>
+    <div className={styles.container}>
+      <h2 className ={styles.title}>Choose Player Mode</h2>
+      <button
+        onClick={() => navigate("/category")} // single-player
+        className={styles.single_button}
+      >
+        Single Player
+      </button>
+      <button
+        onClick={() => navigate("/category")} // multi-player
+        className={styles.multi_button}
+      >
+        Multi Player
+      </button>
+      <button onClick={() => navigate("/")} className={styles.backButton}>
+        Back to Home
+      </button>
     </div>
   );
 };

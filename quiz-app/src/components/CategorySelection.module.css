@@ -1,0 +1,124 @@
+/* src/components/CategorySelection.module.css */
+
+/* Main container */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  min-height: 100vh;
+  background-image: url('/images/images (2).jpeg');
+  background-size: cover;
+}
+
+.firstForm{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+  background-color: #697fe2;
+  padding: 5px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+}
+
+.first
+
+
+/* Title */
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: px;
+  color: #2d3748;
+  text-align: center;
+  
+}
+.chooseQuiz{
+  color: #ffffff;
+  font-size: 4rem;
+  margin-bottom: 5px;
+  margin-top: 5px;
+
+
+}
+/* Form wrapper */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+  background-color: #4f6cecde;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+}
+
+/* Label */
+.label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+/* Dropdowns */
+.select {
+  padding: 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e0;
+}
+
+/* Start Quiz button */
+.button {
+  padding: 12px;
+  font-size: 1.1rem;
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.backButton{
+  background: blue;
+  padding: 10px;
+  margin-top: 10PX;
+}
+
+.backButton:hover {
+  background-color: #104986;
+  transform: scale(1.03);
+}
+
+.startQuiz{
+  background-color: rgb(255, 255, 255);
+  color: #070596;
+  font-size: 2rem;
+}
+
+.startQuiz:hover {
+  background-color: #3fdbb4;
+  transform: scale(1.03);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.7rem;
+  }
+  .form {
+    padding: 15px;
+  }
+  .select {
+    font-size: 0.95rem;
+  }
+  .button {
+    font-size: 1rem;
+  }
+}

@@ -1,66 +1,105 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './components/AuthContext';
-import PrivateRoute from './components/PrivateRoute';
-import SplashScreen from './components/SplashScreen';
-import HomeScreen from './components/HomeScreen';
-import LoginScreen from './components/LoginScreen';
-import SignupScreen from './components/SignupScreen';
-import ModeSelectionScreen from './components/ModeSelectionScreen';
-import CategoryDifficultyScreen from './components/CategoryDifficultyScreen';
-import PlayerSetupMultiplayer from './components/PlayerSetupMultiplayer';
-import SinglePlayerQuiz from './components/SinglePlayerQuiz';
-import MultiplayerQuiz from './components/MultiplayerQuiz';
-import ResultScreen from './components/ResultScreen';
+// src/App.jsx
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-function App() {
+// Screens
+import HomeScreen from "./components/HomeScreen";
+import LoginScreen from "./components/LoginScreen";
+import PlayerSetup from "./components/PlayerSetup";
+import CategorySelection from "./components/CategorySelection";
+import QuizScreen from "./components/QuizScreen";
+import ResultScreen from "./components/ResultScreen";
+
+/**
+ * App.jsx
+ * ----------------
+ * Main routing and state management.
+ * - Handles login/signup, player setup
+ * - Category/difficulty selection
+ * - Quiz flow
+ * - Results
+ */
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [player, setPlayer] = useState(null);
+
+  const [category, setCategory] = useState("");
+  const [difficulty, setDifficulty] = useState("");
+  const [score, setScore] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
+
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<SplashScreen />} />
-          <Route path="/home" element={<HomeScreen />} />
-          <Route path="/login" element={<LoginScreen />} />
-          <Route path="/signup" element={<SignupScreen />} />
-          
-          <Route path="/mode" element={
-            <PrivateRoute>
-              <ModeSelectionScreen />
-            </PrivateRoute>
-          } />
-          
-          <Route path="/category-difficulty" element={
-            <PrivateRoute>
-              <CategoryDifficultyScreen />
-            </PrivateRoute>
-          } />
-          
-          <Route path="/multiplayer-setup" element={
-            <PrivateRoute>
-              <PlayerSetupMultiplayer />
-            </PrivateRoute>
-          } />
-          
-          <Route path="/single-player" element={
-            <PrivateRoute>
-              <SinglePlayerQuiz />
-            </PrivateRoute>
-          } />
-          
-          <Route path="/multi-quiz" element={
-            <PrivateRoute>
-              <MultiplayerQuiz />
-            </PrivateRoute>
-          } />
-          
-          <Route path="/results" element={
-            <PrivateRoute>
-              <ResultScreen />
-            </PrivateRoute>
-          } />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomeScreen />} />
+
+        <Route
+          path="/login"
+          element={
+            <LoginScreen
+              onLogin={(playerData) => {
+                setPlayer(playerData);
+                setIsLoggedIn(true);
+              }}
+            />
+          }
+        />
+
+        <Route
+          path="/setup"
+          element={isLoggedIn ? <PlayerSetup /> : <Navigate to="/login" replace />}
+        />
+
+        <Route
+          path="/category"
+          element={
+            isLoggedIn ? (
+              <CategorySelection
+                onStartQuiz={(cat, diff) => {
+                  setCategory(cat);
+                  setDifficulty(diff);
+                }}
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/quiz"
+          element={
+            isLoggedIn ? (
+              <QuizScreen
+                category={category}
+                difficulty={difficulty}
+                onFinish={(finalScore, total) => {
+                  setScore(finalScore);
+                  setTotalQuestions(total);
+                }}
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/results"
+          element={
+            isLoggedIn ? (
+              <ResultScreen score={score} totalQuestions={totalQuestions} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;

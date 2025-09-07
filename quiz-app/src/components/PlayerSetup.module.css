@@ -1,0 +1,68 @@
+/* src/components/PlayerSetup.module.css */
+
+/* Container centers player setup options */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-content: space-evenly;
+  align-items: center;
+  min-height: 100vh;
+  padding: 5px;
+  background-image: url('/images/textbook.jpg');
+  background-size: cover;
+  margin: 5px;
+}
+
+.title{
+  font-size: 3rem;
+}
+/*single button*/
+.single_button{
+  margin-top:5px;
+  color: red;
+  background-color: white;
+}
+.single_button:hover {
+  background-color: #0f968f;
+  transform: scale(1.03);
+}
+/*multi player buttton*/
+.multi_button{
+  margin-bottom:5px;
+  background-color: white;
+  color: red;
+}
+.multi_button:hover {
+  background-color: #0f968f;
+  transform: scale(1.03);
+}
+
+/*back button */
+.backButton{
+  color: red;
+  background-color: white;
+  margin-bottom: 200px;
+}
+.backButton:hover {
+  background-color: #0f968f;
+  transform: scale(1.03);
+}
+
+
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .heading {
+    font-size: 1.7rem;
+  }
+  .form {
+    padding: 15px;
+  }
+  .input {
+    font-size: 0.95rem;
+  }
+  .startButton {
+    font-size: 1rem;
+  }
+}

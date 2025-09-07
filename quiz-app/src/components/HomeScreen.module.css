@@ -1,0 +1,123 @@
+/* src/components/HomeScreen.module.css */
+
+/* 
+  Container holds both left and right panes side by side on desktop.
+  On mobile, it will stack vertically using media queries.
+*/
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-image: url("/images/home-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  box-sizing: border-box;
+
+}
+
+/* Left pane: welcome + login button */
+.leftPane {
+  flex: 1; /* take half the width */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:center;
+  padding: 20px;
+}
+
+/* Main title */
+.title {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  color: #ffffff; /* dark color */
+}
+
+/*welcome message*/
+.message{
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  color:white;
+  margin-bottom:20px;
+}
+
+/* Login button */
+.startButton {
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  background-color: #3182ce; /* blue */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect for button */
+.startButton:hover {
+  background-color: #2b6cb0;
+  transform: scale(1.05);
+}
+
+/* Right pane: blogs */
+.rightPane {
+  flex: 1; /* take half the width */
+  padding: 20px;
+  overflow-y: auto; /* scroll if content exceeds height */
+  background-color: #3c998a85;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+/* Blog title */
+.blogTitle {
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+
+/* Container for blog cards */
+.blogList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Single blog card */
+.blogCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #5c80a5;
+}
+
+/* Blog image */
+.blogImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover; /* crop image nicely */
+  border-radius: 8px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column; /* stack panes vertically */
+  }
+
+  .leftPane, .rightPane {
+    width: 100%;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .blogImage {
+    height: 120px;
+  }
+}

@@ -1,69 +1,44 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import AuthScreen from '../styles/AuthScreen.module.css';
+// src/components/LoginScreen.jsx
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./LoginScreen.module.css";
 
-const LoginScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  
-  const { login } = useAuth();
+/**
+ * Displays login/signup form.
+ * On successful login, navigates to Player Setup.
+ */
+const LoginScreen = ({ onLogin }) => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    
-    try {
-      setError('');
-      setLoading(true);
-      const result = await login(email, password);
-      
-      if (result.success) {
-        navigate('/mode-select');
-      } else {
-        setError(result.error);
-      }
-    } catch {
-      setError('Failed to log in');
-    }
-    
-    setLoading(false);
+    if (!username) return alert("Please enter a username");
+    const playerData = { name: username };
+    onLogin(playerData); // update player in App.jsx
+    navigate("/setup"); // go to player setup
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Log In to QuizMaster</h2>
-        {error && <div className="error-alert">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button disabled={loading} type="submit" className="auth-btn">
-            Log In
-          </button>
-        </form>
-        <div className="auth-link">
-          Need an account? <Link to="/signup">Sign Up</Link>
-        </div>
-      </div>
+    <div className={styles.container}>
+    
+      <h2 className = {styles.login_title}>Login / Signup</h2>
+      <form onSubmit={handleLogin} className={styles.form}>
+        <input
+          type="text"
+          placeholder="Enter your name"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className={styles.input}
+        />
+        <button type="submit" className={styles.button}>
+          Continue
+        </button>
+      </form>
+      <button onClick={() => navigate("/")} className={styles.backButton}>
+        Back to Home
+      </button>
+
     </div>
   );
 };

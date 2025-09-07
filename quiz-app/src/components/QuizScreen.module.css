@@ -1,0 +1,154 @@
+/* src/components/QuizScreen.module.css */
+
+/* Container for the entire quiz screen, uses flex for left-right layout */
+.container {
+  display: flex;
+  flex-direction: row;
+  padding: 40px;
+  gap: 30px;
+  background-image:url('/images/pencils.jpg');
+  background-size: contain;
+  height: 100vh;
+  
+
+}
+
+/* Left side: main quiz area */
+.container > div:first-child {
+  flex: 2;
+  max-width: 800px;
+}
+
+.quizSide{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  max-width: 600px;
+  background-color: #2c8d41ba;
+  margin-top: 50px;
+  margin-left: 60px;
+  border-radius: 15px;
+}
+
+/* Question title */
+h2 {
+  margin-bottom: 10px;
+  font-size: 2.5rem;
+}
+
+/* Question text */
+p {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+/* Answer buttons */
+.answerButton {
+  display: block;
+  width: 60%;
+  padding: 10px;
+  margin: 6px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #1ac9c6ec;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease;
+  margin-left: 120px;
+}
+
+.answerButton:hover {
+  background-color: #0c365f;
+}
+
+/* Selected answer highlight */
+.selectedAnswer {
+  background-color: #e77deb; /* light green */
+  border-color: #0f5132;
+}
+
+/* Navigation buttons container */
+.navigation {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+/* Submit button styling */
+.submitButton {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.submitButton:hover {
+  background-color: #084298;
+}
+
+/* Right side: blog section */
+.blogPane {
+  flex: 5;
+  max-width: 500px;
+  overflow-y: auto;
+}
+
+.blogTitle {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.blogList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.blogCard {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #3eb491;
+}
+
+.blogImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.blogCard p {
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .blogPane {
+    max-width: 100%;
+    margin-top: 20px;
+  }
+
+  .answerButton {
+    font-size: 1rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+}

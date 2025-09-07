@@ -1,0 +1,74 @@
+/* src/components/ResultScreen.module.css */
+
+/* Container centers result content */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-image: url('/images/doing_great.jpg');
+  background-size: cover;
+}
+
+.result{
+  display: flex;
+  flex-direction: column;
+  border: #38a169;
+  background-color: #4299e1;
+  padding: 40px;
+  font-size: 2rem;
+  border-radius: 10px;
+}
+
+.firstresult{
+  font-size: 3rem;
+}
+
+/* Individual button */
+.retrybutton {
+  padding: 12px 20px;
+  font-size: 2rem;
+  border-radius: 8px;
+  border: none;
+  transition: all 0.2s ease;
+  color: rgb(255, 255, 255);
+  margin: 10px;
+  background-color: #062844;
+}
+
+/* Home button */
+.button {
+  background-color: #062844;
+  color: white;
+  padding: 5px;
+}
+
+.button:hover {
+  background-color: #0a157c;
+  transform: scale(1.03);
+}
+
+.retrybutton:hover {
+  background-color: #38a169;
+  transform: scale(1.03);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .heading {
+    font-size: 1.7rem;
+  }
+  .score {
+    font-size: 1.3rem;
+  }
+  .button {
+    font-size: 1rem;
+    padding: 10px 16px;
+  }
+  .buttonGroup {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
