@@ -1,68 +1,139 @@
-/* src/components/PlayerSetup.module.css */
+/* PlayerSetup */
 
-/* Container centers player setup options */
 .container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/images/group-discussion.jpg');
+  background-size: cover;
+  background-position: center;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(6,3,20,0.67) 0%, rgba(15,8,40,0.50) 50%, rgba(4,10,28,0.62) 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+  background: rgba(8,4,24,0.82);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 24px;
+  padding: 48px 40px;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  justify-content: space-evenly;
+  gap: 24px;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.5);
+  margin-top: -12px;
+}
+
+/* Mode cards grid */
+.modeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.modeCard {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 24px 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  padding: 5px;
-  background-image: url('/images/textbook.jpg');
-  background-size: cover;
-  margin: 5px;
+  gap: 10px;
+  transition: background 0.2s, transform 0.2s, border-color 0.2s;
+}
+.modeCard:hover {
+  background: rgba(124,58,237,0.15);
+  border-color: rgba(124,58,237,0.4);
+  transform: translateY(-3px);
 }
 
-.title{
-  font-size: 3rem;
-}
-/*single button*/
-.single_button{
-  margin-top:5px;
-  color: red;
-  background-color: white;
-}
-.single_button:hover {
-  background-color: #0f968f;
-  transform: scale(1.03);
-}
-/*multi player buttton*/
-.multi_button{
-  margin-bottom:5px;
-  background-color: white;
-  color: red;
-}
-.multi_button:hover {
-  background-color: #0f968f;
-  transform: scale(1.03);
+.modeCardMulti:hover {
+  background: rgba(14,165,233,0.15);
+  border-color: rgba(14,165,233,0.4);
 }
 
-/*back button */
-.backButton{
-  color: red;
-  background-color: white;
-  margin-bottom: 200px;
+.modeIcon {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.modeName {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.modeDesc {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.modeBtn {
+  margin-top: 4px;
+  padding: 8px 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: #fff;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.modeBtnMulti {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+}
+
+.backButton {
+  width: 100%;
+  padding: 13px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  font-family: inherit;
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
 }
 .backButton:hover {
-  background-color: #0f968f;
-  transform: scale(1.03);
+  background: rgba(255,255,255,0.07);
+  color: #fff;
 }
 
-
-
-/* Mobile responsiveness */
-@media (max-width: 480px) {
-  .heading {
-    font-size: 1.7rem;
-  }
-  .form {
-    padding: 15px;
-  }
-  .input {
-    font-size: 0.95rem;
-  }
-  .startButton {
-    font-size: 1rem;
-  }
+@media (max-width: 500px) {
+  .modeGrid { grid-template-columns: 1fr; }
+  .card { padding: 36px 20px; }
 }

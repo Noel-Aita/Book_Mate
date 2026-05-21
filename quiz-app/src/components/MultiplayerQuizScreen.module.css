@@ -1,0 +1,377 @@
+/* MultiplayerQuizScreen */
+
+.container {
+  min-height: 100vh;
+  background-image: url('/images/learning-is-fun.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+.container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(5,2,18,0.70) 0%, rgba(12,6,35,0.55) 50%, rgba(3,8,25,0.65) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  background: rgba(8,4,24,0.85);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 24px;
+  padding: 32px 36px;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.65);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Scoreboard ── */
+.scoreboard {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.playerChip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 2px solid rgba(255,255,255,0.1);
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.activeChip {
+  background: color-mix(in srgb, var(--pcolor) 20%, transparent);
+  border-color: var(--pcolor);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--pcolor) 40%, transparent);
+  transform: scale(1.04);
+}
+
+.chipAvatar { font-size: 1.1rem; }
+
+.chipName {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
+}
+
+.chipScore {
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: #fcd34d;
+  margin-left: auto;
+}
+
+/* Wrong answer indicator on chip */
+.wrongChip {
+  opacity: 0.55;
+  border-color: rgba(239,68,68,0.4) !important;
+}
+
+.chipX {
+  font-size: 0.75rem;
+  color: #f87171;
+  font-weight: 900;
+}
+
+/* ── Progress ── */
+.progressBar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #7c3aed, #60a5fa);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+/* ── Turn banner ── */
+.bannerRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.turnBanner {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: color-mix(in srgb, var(--pcolor, #7c3aed) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--pcolor, #7c3aed) 40%, transparent);
+  border-radius: 12px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.stealBanner {
+  background: rgba(245,158,11,0.15) !important;
+  border-color: rgba(245,158,11,0.45) !important;
+  animation: stealPulse 1s ease infinite alternate;
+}
+
+@keyframes stealPulse {
+  from { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
+  to   { box-shadow: 0 0 12px 2px rgba(245,158,11,0.3); }
+}
+
+/* Timer ring */
+.timerWrap {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.timerRing {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.timerNum {
+  font-size: 0.85rem;
+  font-weight: 900;
+  position: relative;
+  z-index: 1;
+  transition: color 0.5s;
+}
+
+.stealNote {
+  font-size: 0.82rem;
+  color: #fcd34d;
+  background: rgba(245,158,11,0.10);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 8px;
+  padding: 8px 14px;
+  text-align: center;
+  margin-top: -8px;
+}
+
+.turnAvatar { font-size: 1.4rem; }
+
+.turnText {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+}
+
+.qCount {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Question ── */
+.question {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.65;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+}
+
+/* ── Answer grid ── */
+.answerGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.answerBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 13px;
+  color: #fff;
+  font-size: 0.88rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  line-height: 1.4;
+  position: relative;
+}
+.answerBtn:hover:not(:disabled) {
+  background: rgba(124,58,237,0.2);
+  border-color: rgba(124,58,237,0.45);
+  transform: translateY(-1px);
+}
+.answerBtn:disabled { cursor: default; }
+
+.answerLetter {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.7);
+}
+
+.correct {
+  background: rgba(16,185,129,0.22) !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 2px rgba(16,185,129,0.2);
+}
+.correct .answerLetter { background: #10b981; color: #fff; }
+
+.wrong {
+  background: rgba(239,68,68,0.22) !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239,68,68,0.2);
+}
+.wrong .answerLetter { background: #ef4444; color: #fff; }
+
+.dimmed { opacity: 0.35; }
+
+.tick  { margin-left: auto; color: #10b981; font-weight: 900; }
+.cross { margin-left: auto; color: #ef4444; font-weight: 900; }
+
+/* ── Explanation ── */
+.explanation {
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  animation: fadeSlide 0.3s ease;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.expCorrect { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); }
+.expWrong   { background: rgba(239,68,68,0.10);  border: 1px solid rgba(239,68,68,0.28); }
+
+.expTitle {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.expPlayer {
+  color: #c4b5fd;
+}
+
+.expText {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.78);
+  line-height: 1.6;
+}
+
+/* ── Navigation ── */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.exitBtn {
+  padding: 10px 18px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.exitBtn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+.nextBtn {
+  padding: 11px 22px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(124,58,237,0.4);
+}
+.nextBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(124,58,237,0.6);
+}
+
+/* ── Loading ── */
+.loadingWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 48px 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: #a78bfa;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loadingText { color: rgba(255,255,255,0.55); font-size: 0.95rem; }
+
+@media (max-width: 600px) {
+  .card { padding: 22px 16px; }
+  .answerGrid { grid-template-columns: 1fr; }
+  .scoreboard { gap: 6px; }
+  .chipName { max-width: 60px; }
+}

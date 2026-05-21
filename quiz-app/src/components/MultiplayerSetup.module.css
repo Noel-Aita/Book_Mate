@@ -1,0 +1,291 @@
+/* MultiplayerSetup */
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/images/group-discussion.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 24px;
+  position: relative;
+}
+
+.container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(6,3,20,0.70) 0%, rgba(15,8,40,0.55) 50%, rgba(4,10,28,0.65) 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  background: rgba(8,4,24,0.85);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 24px;
+  padding: 40px 36px;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.65);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.title {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #fff;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.45);
+  text-align: center;
+  margin-top: -12px;
+}
+
+/* ── Player slots ── */
+.slots {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid var(--color, rgba(255,255,255,0.12));
+  border-radius: 14px;
+  padding: 12px 14px;
+  transition: border-color 0.2s;
+}
+
+.slotAvatar {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  width: 32px;
+  text-align: center;
+}
+
+/* ── Color picker ── */
+.colorPicker {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.colorDot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--dc);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, opacity 0.15s;
+  padding: 0;
+  flex-shrink: 0;
+}
+.colorDot:hover {
+  transform: scale(1.2);
+  border-color: #fff;
+}
+.colorDotActive {
+  border-color: #fff !important;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.25);
+  transform: scale(1.15);
+}
+.colorDotTaken {
+  opacity: 0.25;
+  cursor: default;
+}
+.colorDotTaken:hover {
+  transform: none;
+  border-color: transparent;
+}
+
+.nameInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: inherit;
+  font-weight: 600;
+  min-width: 0;
+}
+.nameInput::placeholder {
+  color: rgba(255,255,255,0.3);
+  font-weight: 400;
+}
+
+.cpuLabel {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
+
+.typeBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.removeBtn {
+  background: rgba(239,68,68,0.15);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: #f87171;
+  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.removeBtn:hover {
+  background: rgba(239,68,68,0.3);
+}
+
+/* ── Add buttons ── */
+.addRow {
+  display: flex;
+  gap: 10px;
+}
+
+.addBtn {
+  flex: 1;
+  padding: 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: inherit;
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.75);
+  border: 1px dashed rgba(255,255,255,0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.addBtn:hover {
+  background: rgba(124,58,237,0.18);
+  color: #fff;
+  border-color: rgba(124,58,237,0.4);
+}
+
+.addCpuBtn:hover {
+  background: rgba(14,165,233,0.18);
+  border-color: rgba(14,165,233,0.4);
+}
+
+.maxNote {
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.35);
+  font-style: italic;
+}
+
+/* ── Quiz options ── */
+.optionsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.select {
+  padding: 11px 36px 11px 12px;
+  background-color: rgba(255,255,255,0.07);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.5)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.select option { background: #1a0a3a; color: #fff; }
+.select:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.2);
+}
+
+/* ── Start button ── */
+.startBtn {
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+}
+.startBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(124,58,237,0.6);
+}
+
+.backButton {
+  width: 100%;
+  padding: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  background: transparent;
+  color: rgba(255,255,255,0.45);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.backButton:hover {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .card { padding: 28px 18px; }
+  .optionsRow { grid-template-columns: 1fr; }
+}
