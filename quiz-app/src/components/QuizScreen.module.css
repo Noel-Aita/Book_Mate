@@ -396,3 +396,166 @@
   .quizCard    { padding: 24px 18px; }
   .answerGrid  { grid-template-columns: 1fr; }
 }
+
+/* ── Streak badge ── */
+.streakBadge {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #fcd34d;
+  background: rgba(239,68,68,0.15);
+  border: 1px solid rgba(239,68,68,0.35);
+  padding: 4px 12px;
+  border-radius: 999px;
+  animation: streakPop 0.4s ease;
+}
+@keyframes streakPop {
+  0%   { transform: scale(0.8); opacity: 0; }
+  60%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ── Answer animations ── */
+@keyframes bounceIn {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.03); }
+  60%  { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+@keyframes shakeGrid {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+.gridCorrect { animation: bounceIn 0.4s ease; }
+.gridWrong   { animation: shakeGrid 0.4s ease; }
+
+/* ── Hidden answer (50/50) ── */
+.hiddenAnswer {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ── Lifelines ── */
+.lifelines {
+  display: flex;
+  gap: 8px;
+}
+
+.lifeline {
+  flex: 1;
+  padding: 9px 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: inherit;
+  background: rgba(124,58,237,0.15);
+  border: 1px solid rgba(124,58,237,0.35);
+  border-radius: 10px;
+  color: #c4b5fd;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.lifeline:hover:not(:disabled) {
+  background: rgba(124,58,237,0.28);
+  transform: translateY(-1px);
+}
+.lifelineUsed {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: rgba(255,255,255,0.04) !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color: rgba(255,255,255,0.3) !important;
+}
+
+.lifelineFlash {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fcd34d;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 8px;
+  padding: 7px 12px;
+  text-align: center;
+  animation: fadeSlide 0.3s ease;
+}
+
+/* ── Audience poll ── */
+.audiencePoll {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeSlide 0.3s ease;
+}
+.audienceTitle {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 2px;
+}
+.audienceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.audienceLabel {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.75);
+  width: 120px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.audienceBarWrap {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.audienceBar {
+  height: 100%;
+  background: linear-gradient(90deg, #7c3aed, #60a5fa);
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+.audiencePct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #a78bfa;
+  width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Explanation header with bookmark ── */
+.explanationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.bookmarkBtn {
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: inherit;
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+.bookmarkBtn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.bookmarkActive {
+  background: rgba(245,158,11,0.15) !important;
+  border-color: rgba(245,158,11,0.4) !important;
+  color: #fcd34d !important;
+}
